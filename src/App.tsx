@@ -7,13 +7,13 @@ import ResultsPane from './components/results/results_pane'
 import EditorPane from './components/editor/editor_pane'
 import { useMonaco } from '@monaco-editor/react'
 import { editor, languages } from 'monaco-editor'
-import { LANG_DEF, LANG as LANG_NAME } from './components/lang/lang'
+import { LANG_DEF, LANG as LANG_NAME, compile } from './components/lang/lang'
 
 function App() {
   const [count, setCount] = useState(0);
 
 
-  const [editor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
+  const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
 
   const monacoConst = useMonaco();
 
@@ -22,8 +22,8 @@ function App() {
     if(monacoConst){
       monacoConst.languages.register({
         id: LANG_NAME
-      });
-      monacoConst.languages.setMonarchTokensProvider(LANG_NAME, LANG_DEF)
+      }); 
+      monacoConst.languages.setMonarchTokensProvider(LANG_NAME, LANG_DEF);
     }
   }, [monacoConst]);
 
@@ -34,7 +34,11 @@ function App() {
         onMount={(e) => setEditor(e)}
         onChange={(e) => {}}
       ></EditorPane>
-      <ResultsPane graph=' digraph { a -> b } ' onCompile={() => console.log("hello")}/>
+      <ResultsPane graph=' digraph { a -> b } ' onCompile={() => {
+        if(!mountedEditor) throw "OnCompile called with no editor";
+        if(!monacoConst) throw "OnCompile called without monaco";
+        compile(mountedEditor.getValue());
+      }}/>
     </div>
   </>
 }

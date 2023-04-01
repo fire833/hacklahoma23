@@ -7,7 +7,7 @@ export const ResultsDiv = "results-div";
 
 export interface ResultsProps {
     graph: string,
-    onCompile: () => {},
+    onCompile: () => void,
 }
 
 // Primary pane for viewing results.
