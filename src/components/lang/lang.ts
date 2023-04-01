@@ -1,4 +1,4 @@
-import { languages } from "monaco-editor";
+import { editor, languages } from "monaco-editor";
 
 export const LANG = "GraphASM";
 
@@ -37,6 +37,7 @@ export const LANG_DEF: languages.IMonarchLanguage = {
 }
 
 
+
 export const compile = (source: string) => {
-    
+    editor.tokenize(source, LANG);
 }

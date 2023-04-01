@@ -23,17 +23,16 @@ function App() {
       monacoConst.languages.register({
         id: LANG_NAME
       });
-
       monacoConst.languages.setMonarchTokensProvider(LANG_NAME, LANG_DEF)
     }
   }, [monacoConst]);
-
 
   return <>
     <div className={styles.appWrapper}>
 
       <EditorPane
         onMount={(e) => setEditor(e)}
+        onChange={(e) => {}}
       ></EditorPane>
       <ResultsPane></ResultsPane>
 
