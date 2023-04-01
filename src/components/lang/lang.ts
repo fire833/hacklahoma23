@@ -3,7 +3,8 @@ import { Token, editor, languages } from "monaco-editor";
 export const LANG = "GraphASM";
 
 export interface ProgramState {
-
+    instruction_pointer: number,
+    rax: number
 }
 
 export interface FuncDef {
@@ -14,26 +15,30 @@ export interface FuncDef {
 type label = string;
 type thunk = {
     function_name: string,
-    args: ParamType[]   
+    function_def: FuncDef,
+    args: ParamType[]
 }
-export type ParamType = number | label | thunk
+export type ValidScalarType = number | label;
+export type FunctionReturnType = ValidScalarType | void;
+export type ParamType = ValidScalarType | thunk;
+
 
 export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
     "SET": {
         evaluate: (state: ProgramState, value: number) => {
-            
+            state.rax = value;
         },
         num_params: 1
     },
     "$ARITH_ADD": {
         evaluate: (_: ProgramState, a: number, b: number) => {
-            return a + b
+            return a + b;
         },
         num_params: 2
     },
     "$VALUE": {
         evaluate: (state: ProgramState) => {
-            return 77
+            return 77;
         },
         num_params: 0
     }
@@ -125,6 +130,7 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): {params
 
             let param_thunk: thunk = {
                 function_name: param_func_name,
+                function_def: param_func_def,
                 args: param_func_params
             };
             evaluated_params.push(param_thunk);
@@ -171,7 +177,10 @@ function parseLine(line: TokenWithValue[]): Instruction {
     
 
     return {
-        evaluate: () => {}
+        evaluate: (state: ProgramState) => {
+            return apply(function_definition, params, state);
+        },
+        label
     }
 }
 
@@ -189,12 +198,31 @@ export const compile = (source: string): Program => {
 
     let program = filteredBlankLines.map(parseLine);
 
+    run(program, {
+        instruction_pointer: 0,
+        rax: 0
+    })
+
     return program;
 }
 
 
-export const run = (program: Program, initial_state: ProgramState) => {
+export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): ValidScalarType => {
+    let applied_params = params.map(p => typeof p === "object" ? apply(p.function_def, p.args, state) : p);
+    console.log("Applying function with def", def, "with params", applied_params);
     
+    return def.evaluate(state, ...applied_params);
+}
+
+export const run = (program: Program, initial_state: ProgramState) => {
+    let state = {...initial_state};
+
+    while(state.instruction_pointer < program.length) {
+        let instruction = program[state.instruction_pointer];
+        state.instruction_pointer++;
+        instruction.evaluate(state);
+        console.log("State after eval is:", state);
+    }
 }
 
 languages.register({
