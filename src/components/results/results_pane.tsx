@@ -7,7 +7,7 @@ import DebugBar from "./debug_bar";
 export const ResultsDiv = "results-div";
 
 export interface ResultsProps {
-    graph: string,
+    graph: string | null,
     onCompile?: () => void,
     onRun?: () => void,
     onResume?: () => void,
@@ -19,7 +19,11 @@ export interface ResultsProps {
 export default function ResultsPane(props: ResultsProps) {
 
     useEffect(() => {
-        graphviz.graphviz("#" + ResultsDiv).dot(props.graph).onerror(e => console.error(e)).render();
+        if(props.graph){    
+            console.log("Updating graph with", props.graph);
+            
+            graphviz.graphviz("#" + ResultsDiv).dot(props.graph).onerror(e => console.error(e)).render();
+        }
     });
 
     return (

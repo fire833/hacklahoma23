@@ -1,10 +1,11 @@
 import { CancellationToken, Position, Token, editor, languages } from "monaco-editor";
+import { GraphContext } from "./graph";
 
 export const LANG = "GraphASM";
 
 export interface ProgramState {
     instruction_pointer: number,
-    rax: number
+    graph_context: GraphContext
 }
 
 export interface FuncDef {
@@ -26,7 +27,7 @@ export type ParamType = ValidScalarType | thunk;
 export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
     "SET": {
         evaluate: (state: ProgramState, value: number) => {
-            state.rax = value;
+            state.graph_context.get_active().value = value;
         },
         num_params: 1
     },
@@ -210,11 +211,6 @@ export const compile = (source: string): Program => {
 
     let program = filteredBlankLines.map(parseLine);
 
-    run(program, {
-        instruction_pointer: 0,
-        rax: 0
-    })
-
     return program;
 }
 
@@ -226,7 +222,7 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
     return def.evaluate(state, ...applied_params);
 }
 
-export const run = (program: Program, initial_state: ProgramState) => {
+export const run = (program: Program, initial_state: ProgramState, set_graph: (graph_source: string | null) => void) => {
     let state = { ...initial_state };
 
     while (state.instruction_pointer < program.length) {
@@ -234,6 +230,7 @@ export const run = (program: Program, initial_state: ProgramState) => {
         state.instruction_pointer++;
         instruction.evaluate(state);
         console.log("State after eval is:", state);
+        set_graph(state.graph_context.serialize());
     }
 }
 
