@@ -27,8 +27,10 @@ export default function ResultsPane(props: ResultsProps) {
         console.log("In useeffect");
         
         if(props.graph){    
-            console.log("Updating graph with", props.graph);
+            console.log("Updating graph with", props.graph);[]
             let code = props.serializer(props.graph, hoveredNodeId);
+            console.log("Rendering code", code);
+            
             graphviz
                 .graphviz("#" + ResultsDiv)
                 .dot(code)
@@ -61,7 +63,7 @@ export default function ResultsPane(props: ResultsProps) {
     }, [])
 
     return (
-        <div>
+        <div className={styles.resultsWrapper}>
             <DebugBar onCompile={props.onCompile} onPlay={props.onPlay} onPause={props.onPause}
                 setExecutionDelay={props.setExecutionDelay} onStep={props.onStep} />
             <div id={ResultsDiv} className={styles.results_div} />

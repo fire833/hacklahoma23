@@ -17,3 +17,8 @@
 .results_div ellipse {
     pointer-events: all;
 }
+
+.resultsWrapper {
+    width: 100%;
+    display: flex;
+}

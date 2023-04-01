@@ -1,3 +1,5 @@
+import styles from "./LevelSelect.module.css"
+
 
 export interface LevelSelectProps {
     currentTab: number,
@@ -10,13 +12,16 @@ export function LevelSelect(props: LevelSelectProps) {
 
     if(props.currentTab !== -1) return <></>;
 
-    return <>
-        <h1>Level select</h1>
+    return <div className={styles.levelSelectWrapper}>
+        <h1>Escape From A-77</h1>
+        <h2>Level Select</h2>
 
-        {new Array(NUM_LEVELS).fill(0).map((_, ind) => {
-            return <button onClick={() => props.setCurrentTab(ind + 1)}>{ind + 1}</button>
-        })}
+        <div className={styles.buttonGrid}>
+            {new Array(NUM_LEVELS).fill(0).map((_, ind) => {
+                return <button key={ind} onClick={() => props.setCurrentTab(ind + 1)}>{ind + 1}</button>
+            })}
+        </div>
 
-    </>
+    </div>
 
 }

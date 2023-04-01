@@ -1,6 +1,40 @@
 .levelWrapper {
+    width: 100%;
+    height: 100%;
+    grid-template-rows: 1fr 0fr 15fr;
+    display: grid;
+}
+
+.tabButton {
+    background-color: white;
+    font-size: 1.5em;
+    border: 1px solid black;
+}
+
+.tabButton:hover {
+    cursor: pointer;
+}
+
+.activeTabButton {
+    border-bottom: none;
+}
+
+.tabRow {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+.levelPanes {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
     height: 100%;
+}
+
+.levelHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 1em;
+    background-color: rgba(0, 0, 255, 0.2);
 }
