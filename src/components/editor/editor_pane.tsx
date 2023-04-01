@@ -10,10 +10,16 @@ interface EditorPaneProps {
 
 export default function EditorPane(props: EditorPaneProps) {
     return (<div className={styles.editorWrapper}>
-        <Editor
-            onMount={props.onMount}
-            onChange={props.onChange}
-            defaultLanguage={LANG}
-        />
+        <div className={styles.tabRow}>
+            <button> Tab 1</button>
+        </div>
+        <div style={{flexGrow: 1}}>
+            <Editor
+                onMount={props.onMount}
+                onChange={props.onChange}
+                defaultLanguage={LANG}
+                height={"100%"}
+                />
+        </div>
     </div>)
 }
