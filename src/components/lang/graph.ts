@@ -74,14 +74,14 @@ export class GraphContext {
 			// First, register all nodes
 			let node_strings = Object.values(ctx.graph).map(node => {
 				if (node.id === ctx.active_node_id) {
-					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=red]`;
+					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=red shape=circle]`;
 				}
 
 				if (node.id === ctx.root_node_id) {
-					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=orange]`;
+					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=orange shape=circle]`;
 				}
 
-				return `${node.id} [label="${node.value}" id="graphnode_${node.id}"]`;
+				return `${node.id} [label="${node.value}" id="graphnode_${node.id}" shape=circle]`;
 			})
 
 			ctx.bfs((node, visited, queued) => {
@@ -254,9 +254,9 @@ export class GraphContext {
 		ctx[dying_neighbor].neighbors.forEach((v, i, a) => {
 			ctx[v].remove_neighbor(dying_neighbor);
 			ctx[dying_neighbor].neighbors.forEach((v2, i2, a2) => {
-				// if () {
+				if (ctx[v2].has_neighbor(dying_neighbor)) {
 
-				// }
+				}
 			});
 
 		});
