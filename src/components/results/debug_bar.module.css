@@ -2,5 +2,6 @@
 .debug {
     display: flex;
     align-self: stretch;
-    align-items: center;    
+    align-items: center;
+    justify-content: center;    
 }

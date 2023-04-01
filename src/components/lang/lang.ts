@@ -473,3 +473,8 @@ function get_token_at_offset(source_line_parsed: TokenWithValue[], column: numbe
     }
     return source_line_parsed[source_line_parsed.length - 1];
 }
+
+
+export interface TestCase {
+    
+}

@@ -4,25 +4,9 @@ import styles from "./editor.module.css";
 import levelStyles from "../levels/levels.module.css"
 import { LANG } from "../lang/lang";
 import { ReactNode, useState } from "react";
+import { Tab, Tab_ReactNode } from "../levels/level/Level";
 
-export type Tab_Editor = {
-    tab_kind: "editor",
-    tab_name: "Editor"
-}
 
-export type Tab_ReactNode = {
-    tab_kind: "react_node",
-    tab_name: string,
-    node: ReactNode
-}
-
-export type Tab = Tab_Editor | Tab_ReactNode
-
-interface EditorPaneProps {
-    onMount: OnMount,
-    onChange: OnChange,
-    tabs: Tab[]
-}
 
 interface TabButtonProps {
     index: number,
@@ -30,8 +14,15 @@ interface TabButtonProps {
     isActive: boolean,
     activate: () => void
 }
+
 function TabButton(props: TabButtonProps) {
     return <button onClick={props.activate} className={levelStyles.tabButton + " " + (props.isActive ? levelStyles.activeTabButton : "")}> {props.tab_info.tab_name} </button>; 
+}
+
+interface EditorPaneProps {
+    onMount: OnMount,
+    onChange: OnChange,
+    tabs: Tab[]
 }
 
 export default function EditorPane(props: EditorPaneProps) {
