@@ -1,4 +1,4 @@
-import { Token, editor, languages } from "monaco-editor";
+import { CancellationToken, Position, Token, editor, languages } from "monaco-editor";
 
 export const LANG = "GraphASM";
 
@@ -67,10 +67,22 @@ export interface TokenWithValue extends Token {
     source_line: number
 }
 
+export const LANG_COMPLETIONS: languages.InlineCompletionsProvider = {
+
+    provideInlineCompletions: function (model: editor.ITextModel, position: Position, context: languages.InlineCompletionContext, token: CancellationToken): languages.ProviderResult<languages.InlineCompletions<languages.InlineCompletion>> {
+        throw new Error("Function not implemented.");
+    },
+
+    freeInlineCompletions: function (completions: languages.InlineCompletions<languages.InlineCompletion>): void {
+        throw new Error("Function not implemented.");
+    }
+
+}
+
 export function augmentLineTokensWithValue(line: Token[], sourceLine: string, source_line_ind: number): TokenWithValue[] {
     let tokensWithValue: TokenWithValue[] = [];
 
-    for(let i = 0; i < line.length - 1; i++){
+    for (let i = 0; i < line.length - 1; i++) {
         let token = line[i];
         let next_token = line[i + 1];
         let value = sourceLine.substring(token.offset, next_token.offset);
@@ -105,9 +117,9 @@ function filterMeaninglessTokens(line: TokenWithValue[]): TokenWithValue[] {
 }
 
 
-function evaluate_params(function_name: string, args: TokenWithValue[]): {params: ParamType[], tokens_consumed: number} {
+function evaluate_params(function_name: string, args: TokenWithValue[]): { params: ParamType[], tokens_consumed: number } {
     let funcdef = FunctionDefinitions[function_name];
-    if(funcdef === undefined) throw `Unknown function name passed to evaluate_params ${function_name}`;
+    if (funcdef === undefined) throw `Unknown function name passed to evaluate_params ${function_name}`;
     let unsatisfied_params = funcdef.num_params;
     let current_param_idx = 0;
 
@@ -115,7 +127,7 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): {params
 
     while (unsatisfied_params > 0) {
         let current_param = args[current_param_idx];
-        if(current_param.type === `constant.${LANG}`) {
+        if (current_param.type === `constant.${LANG}`) {
             evaluated_params.push(parseInt(current_param.value));
             current_param_idx++;
         } else if (current_param.type === `tag.${LANG}`) {
@@ -124,9 +136,9 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): {params
         } else if (current_param.type === `keyword.${LANG}`) {
             let param_func_name = current_param.value;
             let param_func_def = FunctionDefinitions[param_func_name];
-            if(param_func_def === undefined) throw `Unknown function name passed as parameter ${param_func_name}`;
+            if (param_func_def === undefined) throw `Unknown function name passed as parameter ${param_func_name}`;
 
-            let {params: param_func_params, tokens_consumed} = evaluate_params(param_func_name, args.slice(current_param_idx + 1));
+            let { params: param_func_params, tokens_consumed } = evaluate_params(param_func_name, args.slice(current_param_idx + 1));
 
             let param_thunk: thunk = {
                 function_name: param_func_name,
@@ -156,14 +168,14 @@ function parseLine(line: TokenWithValue[]): Instruction {
 
     // Handle the label first
     let label: string | undefined;
-    if(line[current_token_idx].type === `tag.${LANG}`) {
+    if (line[current_token_idx].type === `tag.${LANG}`) {
         label = line[current_token_idx].value;
         current_token_idx++;
     }
 
     // Then the function name
     let function_token = line[current_token_idx];
-    if(function_token.type !== `keyword.${LANG}`) {
+    if (function_token.type !== `keyword.${LANG}`) {
         throw `Expected a function name, got ${function_token.type}`;
     }
     let function_name = line[current_token_idx].value;
@@ -172,9 +184,9 @@ function parseLine(line: TokenWithValue[]): Instruction {
     current_token_idx++;
 
 
-    let {params, tokens_consumed} = evaluate_params(function_name, line.slice(current_token_idx))
+    let { params, tokens_consumed } = evaluate_params(function_name, line.slice(current_token_idx))
     console.log(`Resolved params:`, params);
-    
+
 
     return {
         evaluate: (state: ProgramState) => {
@@ -190,10 +202,10 @@ export const compile = (source: string): Program => {
     let source_lines = source.split("\n");
     let tokens = editor.tokenize(source, LANG);
     let tokensWithValue = tokens.map((line, ind) => augmentLineTokensWithValue(line, source_lines[ind], ind));
-    
+
     let meaningfulTokens = tokensWithValue.map(line => filterMeaninglessTokens(line));
     console.log("compiled to", meaningfulTokens);
-    
+
     let filteredBlankLines = meaningfulTokens.filter(e => e.length);
 
     let program = filteredBlankLines.map(parseLine);
@@ -210,14 +222,14 @@ export const compile = (source: string): Program => {
 export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): ValidScalarType => {
     let applied_params = params.map(p => typeof p === "object" ? apply(p.function_def, p.args, state) : p);
     console.log("Applying function with def", def, "with params", applied_params);
-    
+
     return def.evaluate(state, ...applied_params);
 }
 
 export const run = (program: Program, initial_state: ProgramState) => {
-    let state = {...initial_state};
+    let state = { ...initial_state };
 
-    while(state.instruction_pointer < program.length) {
+    while (state.instruction_pointer < program.length) {
         let instruction = program[state.instruction_pointer];
         state.instruction_pointer++;
         instruction.evaluate(state);
