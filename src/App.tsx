@@ -9,15 +9,10 @@ import { useMonaco } from '@monaco-editor/react'
 import { editor, languages } from 'monaco-editor'
 import { LANG_COMPLETIONS, LANG_DEF, LANG_HOVER, LANG as LANG_NAME, compile, run } from './components/lang/lang'
 import { GraphContext, GraphNode, GraphNodeID, SerializerKey } from './components/lang/graph'
+import { LevelSelect } from './components/levelselect/LevelSelect'
+import { Level1 } from './components/levels/level1/Level1'
 
 function App() {
-  const [count, setCount] = useState(0);
-
-
-  const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
-
-  const [displayedGraph, setDisplayedGraph] = useState<GraphContext | null>(null);
-  const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
 
   const monacoConst = useMonaco();
 
@@ -38,28 +33,15 @@ function App() {
     }
   }, [monacoConst]);
 
+
+
+  const [currentTab, setCurrentTab] = useState<number>(-1);
+
+
   return <>
     <div className={styles.appWrapper}>
-
-      <EditorPane
-        onMount={(e) => setEditor(e)}
-        onChange={(e) => { }}
-      ></EditorPane>
-      <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
-        if (!mountedEditor) throw "OnCompile called with no editor";
-        if (!monacoConst) throw "OnCompile called without monaco";
-        let program = compile(mountedEditor.getValue());
-
-        run(program, {
-          instruction_pointer: 0,
-          graph_context: new GraphContext({
-            "a": new GraphNode("a", 0, ["b", "c"]),
-            "b": new GraphNode("b", 1, ["a"]),
-            "c": new GraphNode("c", 5, ["a"])
-          }, "a")
-        }, setDisplayedGraph);
-
-      }} />
+      <LevelSelect currentTab={currentTab} setCurrentTab={setCurrentTab}></LevelSelect>
+      <Level1 active_level={currentTab}></Level1>
     </div>
   </>
 }
