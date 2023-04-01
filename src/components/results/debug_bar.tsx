@@ -32,7 +32,7 @@ export default function DebugBar(props: DebugBarProps) {
     // }
 
     return (
-        <div className={styles.debug} draggable={true}
+        <div className={styles.debug} draggable={false}
             style={{ position: "absolute", justifySelf: "center" }}
             // onDragStart={(e) => { handleDrag(e); e.dataTransfer.setDragImage(document.createElement("div"), xCoord, yCoord); }}
             // onDrag={handleDrag}

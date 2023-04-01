@@ -47,40 +47,37 @@ export class GraphContext {
 	active_node_id: GraphNodeID;
 	root_node_id: GraphNodeID;
 
-	// TODO implement serializing internal graph state
-	// to string w/ DFS here.
-
 	static serializers = {
 		"bfs": (ctx: GraphContext, hovered_node_id: GraphNodeID | null): string => {
 			let edge_strings: string[] = [];
-	
+
 			console.log("Called serialize with", ctx, hovered_node_id);
-			
-	
+
+
 			// First, register all nodes
 			let node_strings = Object.values(ctx.graph).map(node => {
 				return `${node.id} [label="${node.value}" id="graphnode_${node.id}"]`;
 			})
-	
+
 			ctx.bfs((node, visited, queued) => {
 				node.neighbors.filter(nid => !visited.has(nid)).forEach(nid => {
 					let edge_label = "";
-					if(hovered_node_id){
+					if (hovered_node_id) {
 						let hovered_node = ctx.graph[hovered_node_id];
-						if(node.id === hovered_node_id) edge_label = hovered_node.neighbors.indexOf(nid).toString();
-						if(nid === hovered_node_id) edge_label = hovered_node.neighbors.indexOf(node.id).toString();
+						if (node.id === hovered_node_id) edge_label = hovered_node.neighbors.indexOf(nid).toString();
+						if (nid === hovered_node_id) edge_label = hovered_node.neighbors.indexOf(node.id).toString();
 					}
 					edge_strings.push(`${node.id} -- ${nid} [${`label="${edge_label}"`}]`);
 				})
 			});
-	
+
 			return `
 			graph {
 				${node_strings.join("\n")}
 				${edge_strings.join("\n")}
 			}
 			`
-		}  
+		}
 	}
 
 	bfs(pred: (node: GraphNode, visited: Set<GraphNodeID>, queued: Set<GraphNodeID>) => void) {
@@ -208,6 +205,9 @@ export class GraphContext {
 	// exist.
 	public cut_neighbor(P1: number) {
 		let dying_neighbor = this.graph[this.active_node_id].neighbors[P1];
+
+		this.graph[this.active_node_id].neighbors.forEach((v, i, a) => { })
+
 	}
 
 }

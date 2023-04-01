@@ -51,73 +51,151 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         evaluate: (_: ProgramState, a: number, b: number) => {
             return a + b;
         },
+        hover_md_lines: [
+            ["Adds P1 and P2 together and returns the result."],
+            [
+                "**Example:**",
+                "```" + LANG,
+                "$MATH_ADD 20 1 # Returns a value of 21",
+                "```"
+            ]
+        ],
         num_params: 2
     },
     "$MATH_MULT": {
         evaluate: (_: ProgramState, a: number, b: number) => {
             return a * b;
         },
+        hover_md_lines: [
+            ["Multiplies P1 and P2 together and returns the result."],
+            [
+                "**Example:**",
+                "```" + LANG,
+                "$MATH_MULT 20 2 # Returns a value of 40",
+                "```"
+            ]
+        ],
         num_params: 2
     },
     "$MATH_DIV": {
         evaluate: (_: ProgramState, a: number, b: number) => {
             return Math.floor(a / b);
         },
+        hover_md_lines: [
+            ["Divides P1 by P2 and returns the result. Will return the floor of the division."],
+            [
+                "**Example:**",
+                "```" + LANG,
+                "$MATH_DIV 35 3 # Returns a value of 11",
+                "$MATH_DIV 35 5 # Returns a value of 7",
+                "```"
+            ]
+        ],
         num_params: 2
     },
     "$MATH_MOD": {
         evaluate: (_: ProgramState, a: number, b: number) => {
             return a % b;
         },
+        hover_md_lines: [
+            ["Divides P1 by P2 and returns the remainder of the division."],
+            [
+                "**Example:**",
+                "```" + LANG,
+                "$MATH_MOD 35 3 # Returns a value of 2",
+                "$MATH_MOD 35 5 # Returns a value of 0",
+                "```"
+            ]
+        ],
         num_params: 2
     },
     "BUBBLE": {
         evaluate: (state: ProgramState, a: number) => {
             state.graph_context.bubble(a);
         },
+        hover_md_lines: [
+            ["Append a neighbor to the active node with a preset value of P1."],
+            // [
+            //     "**Example:**",
+            //     "```" + LANG,
+            //     "$MATH_MOD 35 3 # Returns a value of 2",
+            //     "$MATH_MOD 35 5 # Returns a value of 0",
+            //     "```"
+            // ]
+        ],
         num_params: 1,
     },
     "TRAVERSE": {
         evaluate: (state: ProgramState, a: number) => {
             state.graph_context.traverse(a);
         },
+        hover_md_lines: [
+            ["Set the active node to the neighbor at index P1 of the currently active node. Returns an error if P1 is not a valid index."],
+        ],
         num_params: 1,
     },
     "$NUM_NEIGHBORS": {
         evaluate: (state: ProgramState) => {
             return state.graph_context.num_neighbors();
         },
+        hover_md_lines: [
+            ["Returns the number of neighbors attached to the currently active node."],
+        ],
         num_params: 0,
     },
     "REORDER": {
         evaluate: (state: ProgramState, a: number, b: number) => {
             state.graph_context.reorder(a, b);
         },
+        hover_md_lines: [
+            ["Sets neighbor P2 to have the index of P1 and neighbor P1 to have the index of P2."],
+        ],
         num_params: 2,
     },
     "SET_NEIGHBOR": {
         evaluate: (state: ProgramState, a: number, b: number) => {
             state.graph_context.set_neighbor(a, b);
         },
+        hover_md_lines: [
+            ["Sets the value of neighbor with index P1 to the value P2."],
+        ],
         num_params: 2,
     },
     "$GET_NEIGHBOR": {
         evaluate: (state: ProgramState, a: number) => {
             state.graph_context.get_neighbor(a);
         },
+        hover_md_lines: [
+            ["Returns the current value of neighbor with index P1."],
+        ],
         num_params: 1,
     },
     "DELETE_NEIGHBOR": {
         evaluate: (state: ProgramState, a: number) => {
             state.graph_context.delete_neighbor(a);
         },
+        hover_md_lines: [
+            ["Remove the neighbor at index P1 from the graph. All edges of said node will be removed from the graph and the value of the node will be lost."],
+        ],
         num_params: 1,
     },
     "CUT_NEIGHBOR": {
         evaluate: (state: ProgramState, a: number) => {
             state.graph_context.cut_neighbor(a);
         },
+        hover_md_lines: [
+            ["Remove the neighbor at index P1 from the graph. All neighbors of the cut node will be connected. For every pair of nodes which were neighbors of the cut node, a new edge will be created between them if it does not already exist."],
+        ],
         num_params: 1,
+    },
+    "SET_ROOT": {
+        evaluate: (state: ProgramState) => {
+            state.graph_context.set_root();
+        },
+        hover_md_lines: [
+            ["Sets the value of the the root node as the value of the current active node. This does not set the root as the active node."],
+        ],
+        num_params: 0,
     },
 }
 
