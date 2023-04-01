@@ -26,6 +26,12 @@ export type ParamType = ValidScalarType | thunk;
 
 
 export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
+    "$VALUE": {
+        evaluate: (state: ProgramState) => {
+            return state.graph_context.value();
+        },
+        num_params: 0
+    },
     "SET": {
         evaluate: (state: ProgramState, value: number) => {
             state.graph_context.get_active().value = value;
@@ -41,18 +47,55 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         ],
         num_params: 1
     },
-    "$ARITH_ADD": {
+    "$MATH_ADD": {
         evaluate: (_: ProgramState, a: number, b: number) => {
             return a + b;
         },
         num_params: 2
     },
-    "$VALUE": {
-        evaluate: (state: ProgramState) => {
-            return 77;
+    "$MATH_MULT": {
+        evaluate: (_: ProgramState, a: number, b: number) => {
+            return a * b;
         },
-        num_params: 0
-    }
+        num_params: 2
+    },
+    "$MATH_DIV": {
+        evaluate: (_: ProgramState, a: number, b: number) => {
+            return a / b;
+        },
+        num_params: 2
+    },
+    "$MATH_MOD": {
+        evaluate: (_: ProgramState, a: number, b: number) => {
+            return a % b;
+        },
+        num_params: 2
+    },
+    "BUBBLE": {
+        evaluate: (state: ProgramState, a: number) => {
+            state.graph_context.bubble(a);
+        },
+        num_params: 1,
+    },
+    "TRAVERSE": {
+        evaluate: (state: ProgramState, a: number) => {
+            state.graph_context.traverse(a);
+        },
+        num_params: 1,
+    },
+    "$NUM_NEIGHBORS": {
+        evaluate: (state: ProgramState) => {
+            return state.graph_context.num_neighbors();
+        },
+        num_params: 0,
+    },
+    "REORDER": {
+        evaluate: (state: ProgramState, a: number, b: number) => {
+            state.graph_context.reorder(a, b);
+        },
+        num_params: 2,
+    },
+
 }
 
 export const LANG_DEF: languages.IMonarchLanguage = {
@@ -83,22 +126,22 @@ export const LANG_COMPLETIONS: languages.CompletionItemProvider = {
 
         let completing_token = model.getWordAtPosition(position);
         let char_before = model.getLineContent(position.lineNumber).charAt((completing_token?.startColumn || 0) - 1 - 1);
-        
+
         console.log("Char before is:", char_before);
 
         console.log("Called suggestion provider");
 
         console.log(completing_token, "is completing");
-        
+
         let range = {
-                        startLineNumber: position.lineNumber,
-                        endLineNumber: position.lineNumber,
-                        startColumn: (completing_token?.startColumn || position.column) + (char_before === "$" ? -1 : 0),
-                        endColumn: (completing_token?.endColumn || position.column) + (char_before === "$" ? -1 : 0)
-                    }
-        
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: (completing_token?.startColumn || position.column) + (char_before === "$" ? -1 : 0),
+            endColumn: (completing_token?.endColumn || position.column) + (char_before === "$" ? -1 : 0)
+        }
+
         console.log("Over range", range);
-        
+
         return {
             suggestions: Object.keys(FunctionDefinitions).map(func_name => {
                 let item: languages.CompletionItem = {
@@ -120,22 +163,21 @@ export const LANG_HOVER: languages.HoverProvider = {
         let source_line_parsed = augmentLineTokensWithValue(editor.tokenize(source_line, LANG)[0], source_line, position.lineNumber);
         console.log("Source line parsed is ", source_line_parsed);
         console.log("Hovering at position", position);
-        
-        
-        let hovered_token = get_token_at_offset(source_line_parsed, position.column);        
-        if(hovered_token === null) {
+
+        let hovered_token = get_token_at_offset(source_line_parsed, position.column);
+        if (hovered_token === null) {
             return {
                 contents: []
             }
-        } 
+        }
 
-        if (hovered_token.type === `keyword.${LANG}`){
+        if (hovered_token.type === `keyword.${LANG}`) {
             let hovered_func_name = hovered_token.value;
             let hovered_func_def = FunctionDefinitions[hovered_func_name];
             return {
                 contents: [
                     {
-                        value: `# Function ${hovered_token.value}`, 
+                        value: `# Function ${hovered_token.value}`,
                     },
                     ...(hovered_func_def.hover_md_lines || []).map(lines => {
                         return {
@@ -146,11 +188,11 @@ export const LANG_HOVER: languages.HoverProvider = {
             }
         }
         console.log("Hovering: ", hovered_token);
-        
+
         return {
             contents: []
         }
-        
+
     },
 }
 
@@ -169,7 +211,7 @@ export function augmentLineTokensWithValue(line: Token[], sourceLine: string, so
         tokensWithValue.push(tokenWithValue);
     }
 
-    if(line.length > 0) {
+    if (line.length > 0) {
         // Handle the last token
         let last_token = line[line.length - 1];
         let last_value = sourceLine.substring(last_token.offset);
@@ -225,7 +267,7 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): { param
             evaluated_params.push(param_thunk);
 
             console.log(`Evaluating function param ${param_func_name} consumed ${tokens_consumed} tokens`);
-            
+
 
             current_param_idx += tokens_consumed + 1;
         } else {
@@ -304,7 +346,7 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
 export const run = (program: Program, initial_state: ProgramState, set_graph: (ctx: GraphContext) => void) => {
 
     console.log("Running program: ", program);
-    
+
     let state = { ...initial_state };
 
     while (state.instruction_pointer < program.length) {
@@ -322,11 +364,11 @@ languages.register({
 languages.setMonarchTokensProvider(LANG, LANG_DEF);
 
 function get_token_at_offset(source_line_parsed: TokenWithValue[], column: number) {
-    if(source_line_parsed.length === 0) return null;
+    if (source_line_parsed.length === 0) return null;
     let last_token = source_line_parsed[0];
-    for(let t of source_line_parsed) {
+    for (let t of source_line_parsed) {
         if (t.offset >= column) return last_token;
-        last_token = t; 
+        last_token = t;
     }
     return source_line_parsed[source_line_parsed.length - 1];
 }

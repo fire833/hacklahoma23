@@ -12,8 +12,8 @@ export interface ResultsProps {
     graph: GraphContext | null,
     serializer: (ctx: GraphContext, hovered_node_id: string | null) => string,
     onCompile?: () => void,
-    onRun?: () => void,
-    onResume?: () => void,
+    onPlay?: () => void,
+    onPause?: () => void,
     setExecutionDelay?: (delay: number) => void,
     onStep?: () => void,
 }
@@ -62,7 +62,8 @@ export default function ResultsPane(props: ResultsProps) {
 
     return (
         <div>
-            <DebugBar onCompile={props.onCompile} onRun={props.onRun} onResume={props.onResume} onStep={props.onStep}/>
+            <DebugBar onCompile={props.onCompile} onPlay={props.onPlay} onPause={props.onPause}
+                setExecutionDelay={props.setExecutionDelay} onStep={props.onStep} />
             <div id={ResultsDiv} className={styles.results_div} />
         </div>
     )
