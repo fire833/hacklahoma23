@@ -1,5 +1,10 @@
 
 export type GraphNodeID = string;
+
+export function NewGraphNodeID(): string {
+	return crypto.randomUUID().replace("-", "");
+}
+
 export class GraphNode {
 	id: GraphNodeID;
 	value: number = 0;
@@ -36,6 +41,18 @@ export class GraphNode {
 		if (index != -1) {
 			this.neighbors.splice(index, 1);
 		}
+	}
+
+	public has_neighbor(find: GraphNodeID): boolean {
+		let found = false;
+
+		this.neighbors.forEach((v, i, a) => {
+			if (v === find) {
+				found = true;
+			}
+		})
+
+		return found;
 	}
 }
 
@@ -114,6 +131,14 @@ export class GraphContext {
 		this.root_node_id = root_id;
 	}
 
+	enter_root_ctx() {
+
+	}
+
+	exit_root_ctx() {
+
+	}
+
 	// public-facing instruction implementations
 
 	// Returns the current u32 stored within the active node.
@@ -143,7 +168,7 @@ export class GraphContext {
 
 	// Append a neighbor to the active node with a preset value of P1.
 	public bubble(P1: number) {
-		let node = new GraphNode(crypto.randomUUID(), P1);
+		let node = new GraphNode(NewGraphNodeID(), P1);
 		this.graph[this.active_node_id].neighbors.push(node.id);
 		this.graph[node.id] = node;
 	}
@@ -192,6 +217,11 @@ export class GraphContext {
 	public delete_neighbor(P1: number) {
 		let dying_neighbor = this.graph[this.active_node_id].neighbors[P1];
 
+		// this behavior can change later if needed
+		if (dying_neighbor === this.root_node_id || dying_neighbor === this.active_node_id) {
+			return;
+		}
+
 		this.graph[dying_neighbor].neighbors.forEach((v, i, a) => {
 			this.graph[v].remove_neighbor(dying_neighbor);
 		})
@@ -204,10 +234,22 @@ export class GraphContext {
 	// the cut node, a new edge will be created between them if it does not already 
 	// exist.
 	public cut_neighbor(P1: number) {
-		let dying_neighbor = this.graph[this.active_node_id].neighbors[P1];
+		let ctx = this.graph;
+		let dying_neighbor = ctx[this.active_node_id].neighbors[P1];
 
-		this.graph[this.active_node_id].neighbors.forEach((v, i, a) => { })
+		// this behavior can change later if needed
+		if (dying_neighbor === this.root_node_id || dying_neighbor === this.active_node_id) {
+			return;
+		}
 
+		ctx[dying_neighbor].neighbors.forEach((v, i, a) => {
+			ctx[v].remove_neighbor(dying_neighbor);
+			ctx[dying_neighbor].neighbors.forEach((v2, i2, a2) => {
+				// if () {
+
+				// }
+			});
+
+		});
 	}
-
 }
