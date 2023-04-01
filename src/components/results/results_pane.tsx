@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import styles from "./results.module.css";
 import * as graphviz from "d3-graphviz";
+import * as transition from "d3-transition";
 import DebugBar from "./debug_bar";
 import { GraphContext, GraphNodeID } from "../lang/graph";
 
@@ -28,7 +29,12 @@ export default function ResultsPane(props: ResultsProps) {
         if(props.graph){    
             console.log("Updating graph with", props.graph);
             let code = props.serializer(props.graph, hoveredNodeId);
-            graphviz.graphviz("#" + ResultsDiv).dot(code).onerror(e => console.error(e)).render();
+            graphviz
+                .graphviz("#" + ResultsDiv)
+                .dot(code)
+                .onerror(e => console.error(e))
+                .transition(() => transition.transition().duration(250) as any)
+                .render();
         }
     });
 
