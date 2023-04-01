@@ -34,7 +34,7 @@ function App() {
         onMount={(e) => setEditor(e)}
         onChange={(e) => {}}
       ></EditorPane>
-      <ResultsPane graph=' digraph { a -> b } '/>
+      <ResultsPane graph=' digraph { a -> b } ' onCompile={() => console.log("hello")}/>
     </div>
   </>
 }
