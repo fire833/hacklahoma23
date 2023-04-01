@@ -34,8 +34,17 @@ export function Level1(props: Level1Props) {
                 onMount={(e) => setEditor(e)}
                 onChange={(e) => { }}
                 tabs={[{
-                    tab_kind: "editor"
-                }]}
+                    tab_kind: "editor",
+                    tab_name: "Editor"
+                }, {
+                    tab_kind: "react_node",
+                    tab_name: "Level 1",
+                    node: <div>
+                        <h1>Level 1</h1>
+                        <p>You're trapped! Escape!</p>
+                    </div>
+                }
+            ]}
             ></EditorPane>
             <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
                 if (!mountedEditor) throw "OnCompile called with no editor";
