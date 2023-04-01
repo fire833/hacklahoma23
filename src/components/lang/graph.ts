@@ -5,10 +5,15 @@ export class GraphNode {
 	value: number = 0;
 	neighbors: GraphNodeID[] = [];
 
+	constructor(id: GraphNodeID, value: number, neighbors: GraphNodeID[])
 	constructor(id: GraphNodeID, value: number);
 	constructor(id: GraphNodeID);
-	constructor(id: GraphNodeID, value?: number) {
+	constructor(id: GraphNodeID, value?: number, neighbors?: GraphNodeID[]) {
 		this.id = id;
+
+		if (neighbors) {
+			this.neighbors = neighbors;
+		}
 
 		if (value) {
 			this.value = value;
