@@ -61,7 +61,7 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
     },
     "$MATH_DIV": {
         evaluate: (_: ProgramState, a: number, b: number) => {
-            return a / b;
+            return Math.floor(a / b);
         },
         num_params: 2
     },
@@ -95,7 +95,30 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         },
         num_params: 2,
     },
-
+    "SET_NEIGHBOR": {
+        evaluate: (state: ProgramState, a: number, b: number) => {
+            state.graph_context.set_neighbor(a, b);
+        },
+        num_params: 2,
+    },
+    "$GET_NEIGHBOR": {
+        evaluate: (state: ProgramState, a: number) => {
+            state.graph_context.get_neighbor(a);
+        },
+        num_params: 1,
+    },
+    "DELETE_NEIGHBOR": {
+        evaluate: (state: ProgramState, a: number) => {
+            state.graph_context.delete_neighbor(a);
+        },
+        num_params: 1,
+    },
+    "CUT_NEIGHBOR": {
+        evaluate: (state: ProgramState, a: number) => {
+            state.graph_context.cut_neighbor(a);
+        },
+        num_params: 1,
+    },
 }
 
 export const LANG_DEF: languages.IMonarchLanguage = {
