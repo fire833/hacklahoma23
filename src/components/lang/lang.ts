@@ -169,14 +169,16 @@ export function augmentLineTokensWithValue(line: Token[], sourceLine: string, so
         tokensWithValue.push(tokenWithValue);
     }
 
-    // Handle the last token
-    let last_token = line[line.length - 1];
-    let last_value = sourceLine.substring(last_token.offset);
-    tokensWithValue.push({
-        ...last_token,
-        value: last_value,
-        source_line: source_line_ind
-    });
+    if(line.length > 0) {
+        // Handle the last token
+        let last_token = line[line.length - 1];
+        let last_value = sourceLine.substring(last_token.offset);
+        tokensWithValue.push({
+            ...last_token,
+            value: last_value,
+            source_line: source_line_ind
+        });
+    }
 
     return tokensWithValue;
 }
@@ -301,20 +303,17 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
 
 export const run = (program: Program, initial_state: ProgramState, set_graph: (ctx: GraphContext) => void) => {
 
-    let inner = async () => {
-        let state = { ...initial_state };
+    console.log("Running program: ", program);
     
-        while (state.instruction_pointer < program.length) {
-            let instruction = program[state.instruction_pointer];
-            state.instruction_pointer++;
-            instruction.evaluate(state);
-            console.log("State after eval is:", state);
-            set_graph(state.graph_context);
-            await new Promise(resolve => setTimeout(resolve, 250));
-        }
-    }
+    let state = { ...initial_state };
 
-    inner();
+    while (state.instruction_pointer < program.length) {
+        let instruction = program[state.instruction_pointer];
+        state.instruction_pointer++;
+        instruction.evaluate(state);
+        console.log("State after eval is:", state);
+        set_graph(state.graph_context);
+    }
 }
 
 languages.register({
