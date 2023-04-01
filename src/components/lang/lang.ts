@@ -68,16 +68,40 @@ export interface TokenWithValue extends Token {
     source_line: number
 }
 
-export const LANG_COMPLETIONS: languages.InlineCompletionsProvider = {
+export const LANG_COMPLETIONS: languages.CompletionItemProvider = {
+    provideCompletionItems: function (model: editor.ITextModel, position: Position, context: languages.CompletionContext, token: CancellationToken): languages.ProviderResult<languages.CompletionList> {
 
-    provideInlineCompletions: function (model: editor.ITextModel, position: Position, context: languages.InlineCompletionContext, token: CancellationToken): languages.ProviderResult<languages.InlineCompletions<languages.InlineCompletion>> {
-        throw new Error("Function not implemented.");
-    },
+        let completing_token = model.getWordAtPosition(position);
+        let char_before = model.getLineContent(position.lineNumber).charAt((completing_token?.startColumn || 0) - 1 - 1);
+        
+        console.log("Char before is:", char_before);
 
-    freeInlineCompletions: function (completions: languages.InlineCompletions<languages.InlineCompletion>): void {
-        throw new Error("Function not implemented.");
+        console.log("Called suggestion provider");
+
+        console.log(completing_token, "is completing");
+        
+        let range = {
+                        startLineNumber: position.lineNumber,
+                        endLineNumber: position.lineNumber,
+                        startColumn: (completing_token?.startColumn || position.column) + (char_before === "$" ? -1 : 0),
+                        endColumn: (completing_token?.endColumn || position.column) + (char_before === "$" ? -1 : 0)
+                    }
+        
+        console.log("Over range", range);
+        
+
+        return {
+            suggestions: Object.keys(FunctionDefinitions).map(func_name => {
+                let item: languages.CompletionItem = {
+                    label: func_name,
+                    kind: languages.CompletionItemKind.Function,
+                    insertText: func_name,
+                    range
+                }
+                return item;
+            })
+        }
     }
-
 }
 
 export function augmentLineTokensWithValue(line: Token[], sourceLine: string, source_line_ind: number): TokenWithValue[] {
