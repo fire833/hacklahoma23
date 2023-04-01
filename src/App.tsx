@@ -5,13 +5,34 @@ import styles from './App.module.css'
 import Editor from './components/editor/editor_pane'
 import ResultsPane from './components/results/results_pane'
 import EditorPane from './components/editor/editor_pane'
+import { useMonaco } from '@monaco-editor/react'
+import { editor, languages } from 'monaco-editor'
+import { LANG as LANG_NAME } from './components/lang/lang'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+
+  const [editor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
+
+  const monacoConst = useMonaco();
+
+
+  useEffect(() => {
+    if(monacoConst){
+      monacoConst.languages.register({
+        id: LANG_NAME
+      });
+    }
+  }, [monacoConst]);
+
+
   return <>
     <div className={styles.appWrapper}>
 
-      <EditorPane></EditorPane>
+      <EditorPane
+        onMount={(e) => setEditor(e)}
+      ></EditorPane>
       <ResultsPane></ResultsPane>
 
     </div>

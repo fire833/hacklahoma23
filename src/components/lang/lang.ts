@@ -1,4 +1,1 @@
-
-export interface GraphityVM {
-    
-}
+export const LANG = "GraphASM";
