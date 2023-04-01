@@ -2,7 +2,7 @@
 export type GraphNodeID = string;
 
 export function NewGraphNodeID(): string {
-	return crypto.randomUUID().replace("-", "");
+	return "a" + crypto.randomUUID().replaceAll("-", "").substring(0, 8);
 }
 
 export class GraphNode {
@@ -73,6 +73,14 @@ export class GraphContext {
 
 			// First, register all nodes
 			let node_strings = Object.values(ctx.graph).map(node => {
+				if (node.id === ctx.active_node_id) {
+					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=red]`;
+				}
+
+				if (node.id === ctx.root_node_id) {
+					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=orange]`;
+				}
+
 				return `${node.id} [label="${node.value}" id="graphnode_${node.id}"]`;
 			})
 
@@ -169,6 +177,7 @@ export class GraphContext {
 	// Append a neighbor to the active node with a preset value of P1.
 	public bubble(P1: number) {
 		let node = new GraphNode(NewGraphNodeID(), P1);
+		node.add_neighbor(this.active_node_id);
 		this.graph[this.active_node_id].neighbors.push(node.id);
 		this.graph[node.id] = node;
 	}
