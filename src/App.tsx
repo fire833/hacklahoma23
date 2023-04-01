@@ -7,7 +7,7 @@ import ResultsPane from './components/results/results_pane'
 import EditorPane from './components/editor/editor_pane'
 import { useMonaco } from '@monaco-editor/react'
 import { editor, languages } from 'monaco-editor'
-import { LANG_COMPLETIONS, LANG_DEF, LANG as LANG_NAME, compile, run } from './components/lang/lang'
+import { LANG_COMPLETIONS, LANG_DEF, LANG_HOVER, LANG as LANG_NAME, compile, run } from './components/lang/lang'
 import { GraphContext } from './components/lang/graph'
 
 function App() {
@@ -28,10 +28,11 @@ function App() {
       });
       let dispose_tokens = monacoConst.languages.setMonarchTokensProvider(LANG_NAME, LANG_DEF);
       let dispose_completions = monacoConst.languages.registerCompletionItemProvider(LANG_NAME, LANG_COMPLETIONS)
-
+      let dispose_hover = monacoConst.languages.registerHoverProvider(LANG_NAME, LANG_HOVER);
       return () => {
         dispose_completions.dispose();
         dispose_tokens.dispose();
+        dispose_hover.dispose();
       }
     }
   }, [monacoConst]);

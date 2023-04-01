@@ -10,7 +10,8 @@ export interface ProgramState {
 
 export interface FuncDef {
     evaluate: Function,
-    num_params: number
+    num_params: number,
+    hover_md_lines?: string[][]
 }
 
 type label = string;
@@ -29,6 +30,15 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         evaluate: (state: ProgramState, value: number) => {
             state.graph_context.get_active().value = value;
         },
+        hover_md_lines: [
+            ["Set the value of the active node"],
+            [
+                "**Example:**",
+                "```" + LANG,
+                "SET 22 # Sets the active node to 22",
+                "```"
+            ]
+        ],
         num_params: 1
     },
     "$ARITH_ADD": {
@@ -89,7 +99,6 @@ export const LANG_COMPLETIONS: languages.CompletionItemProvider = {
         
         console.log("Over range", range);
         
-
         return {
             suggestions: Object.keys(FunctionDefinitions).map(func_name => {
                 let item: languages.CompletionItem = {
@@ -102,6 +111,47 @@ export const LANG_COMPLETIONS: languages.CompletionItemProvider = {
             })
         }
     }
+}
+
+export const LANG_HOVER: languages.HoverProvider = {
+    provideHover(model, position, cancel_token) {
+        let hovered_word = model.getWordAtPosition(position);
+        let source_line = model.getLineContent(position.lineNumber);
+        let source_line_parsed = augmentLineTokensWithValue(editor.tokenize(source_line, LANG)[0], source_line, position.lineNumber);
+        console.log("Source line parsed is ", source_line_parsed);
+        console.log("Hovering at position", position);
+        
+        
+        let hovered_token = get_token_at_offset(source_line_parsed, position.column);        
+        if(hovered_token === null) {
+            return {
+                contents: []
+            }
+        } 
+
+        if (hovered_token.type === `keyword.${LANG}`){
+            let hovered_func_name = hovered_token.value;
+            let hovered_func_def = FunctionDefinitions[hovered_func_name];
+            return {
+                contents: [
+                    {
+                        value: `# Function ${hovered_token.value}`, 
+                    },
+                    ...(hovered_func_def.hover_md_lines || []).map(lines => {
+                        return {
+                            value: lines.join("\n")
+                        }
+                    })
+                ]
+            }
+        }
+        console.log("Hovering: ", hovered_token);
+        
+        return {
+            contents: []
+        }
+        
+    },
 }
 
 export function augmentLineTokensWithValue(line: Token[], sourceLine: string, source_line_ind: number): TokenWithValue[] {
@@ -172,7 +222,10 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): { param
             };
             evaluated_params.push(param_thunk);
 
-            current_param_idx += tokens_consumed;
+            console.log(`Evaluating function param ${param_func_name} consumed ${tokens_consumed} tokens`);
+            
+
+            current_param_idx += tokens_consumed + 1;
         } else {
             // throw `Unexpected token type`
         }
@@ -262,3 +315,13 @@ languages.register({
     id: LANG
 })
 languages.setMonarchTokensProvider(LANG, LANG_DEF);
+
+function get_token_at_offset(source_line_parsed: TokenWithValue[], column: number) {
+    if(source_line_parsed.length === 0) return null;
+    let last_token = source_line_parsed[0];
+    for(let t of source_line_parsed) {
+        if (t.offset >= column) return last_token;
+        last_token = t; 
+    }
+    return source_line_parsed[source_line_parsed.length - 1];
+}
