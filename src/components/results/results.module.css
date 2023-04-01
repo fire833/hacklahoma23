@@ -8,3 +8,12 @@
     height: 100%;
     width: 100%;
 }
+
+
+.results_div polygon {
+    pointer-events: none;
+}
+
+.results_div ellipse {
+    pointer-events: all;
+}

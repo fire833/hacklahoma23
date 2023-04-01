@@ -8,7 +8,7 @@ import EditorPane from './components/editor/editor_pane'
 import { useMonaco } from '@monaco-editor/react'
 import { editor, languages } from 'monaco-editor'
 import { LANG_COMPLETIONS, LANG_DEF, LANG_HOVER, LANG as LANG_NAME, compile, run } from './components/lang/lang'
-import { GraphContext } from './components/lang/graph'
+import { GraphContext, GraphNode, GraphNodeID, SerializerKey } from './components/lang/graph'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -16,7 +16,8 @@ function App() {
 
   const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
 
-  const [graphSource, setGraphSource] = useState<string | null>(null);
+  const [displayedGraph, setDisplayedGraph] = useState<GraphContext | null>(null);
+  const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
 
   const monacoConst = useMonaco();
 
@@ -44,7 +45,7 @@ function App() {
         onMount={(e) => setEditor(e)}
         onChange={(e) => { }}
       ></EditorPane>
-      <ResultsPane graph={graphSource} onCompile={() => {
+      <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
         if (!mountedEditor) throw "OnCompile called with no editor";
         if (!monacoConst) throw "OnCompile called without monaco";
         let program = compile(mountedEditor.getValue());
@@ -52,18 +53,11 @@ function App() {
         run(program, {
           instruction_pointer: 0,
           graph_context: new GraphContext({
-            "a": {
-              id: "a",
-              neighbors: ["b"],
-              value: 0
-            },
-            "b": {
-              id: "b",
-              neighbors: ["a"],
-              value: 1
-            }
+            "a": new GraphNode("a", 0, ["b", "c"]),
+            "b": new GraphNode("b", 1, ["a"]),
+            "c": new GraphNode("c", 5, ["a"])
           }, "a")
-        }, setGraphSource);
+        }, setDisplayedGraph);
 
       }} />
     </div>

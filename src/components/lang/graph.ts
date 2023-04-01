@@ -1,5 +1,5 @@
 
-type GraphNodeID = string;
+export type GraphNodeID = string;
 export class GraphNode {
 	id: GraphNodeID;
 	value: number = 0;
@@ -39,6 +39,8 @@ export class GraphNode {
 	}
 }
 
+export type SerializerKey = keyof typeof GraphContext.serializers;
+
 // GraphContext is the primary data structure to store graph execution state.
 export class GraphContext {
 	graph: { [id: GraphNodeID]: GraphNode } = {};
@@ -47,27 +49,38 @@ export class GraphContext {
 
 	// TODO implement serializing internal graph state
 	// to string w/ DFS here.
-	serialize(): string {
-		let edge_strings: string[] = [];
 
-		// First, register all nodes
-		let node_strings = Object.values(this.graph).map(node => {
-			return `${node.id} [label="${node.value}"]`;
-		})
-
-		this.bfs((node, visited, queued) => {
-			node.neighbors.filter(nid => !visited.has(nid)).forEach(nid => {
-				edge_strings.push(`${node.id} -- ${nid}`);
-			})
-		});
-
-		return `
-		graph {
-			${node_strings.join("\n")}
+	static serializers = {
+		"bfs": (ctx: GraphContext, hovered_node_id: GraphNodeID | null): string => {
+			let edge_strings: string[] = [];
+	
+			console.log("Called serialize with", ctx, hovered_node_id);
 			
-			${edge_strings.join("\n")}
-		}
-		`
+	
+			// First, register all nodes
+			let node_strings = Object.values(ctx.graph).map(node => {
+				return `${node.id} [label="${node.value}" id="graphnode_${node.id}"]`;
+			})
+	
+			ctx.bfs((node, visited, queued) => {
+				node.neighbors.filter(nid => !visited.has(nid)).forEach(nid => {
+					let edge_label = "";
+					if(hovered_node_id){
+						let hovered_node = ctx.graph[hovered_node_id];
+						if(node.id === hovered_node_id) edge_label = hovered_node.neighbors.indexOf(nid).toString();
+						if(nid === hovered_node_id) edge_label = hovered_node.neighbors.indexOf(node.id).toString();
+					}
+					edge_strings.push(`${node.id} -- ${nid} [${`label="${edge_label}"`}]`);
+				})
+			});
+	
+			return `
+			graph {
+				${node_strings.join("\n")}
+				${edge_strings.join("\n")}
+			}
+			`
+		}  
 	}
 
 	bfs(pred: (node: GraphNode, visited: Set<GraphNodeID>, queued: Set<GraphNodeID>) => void) {

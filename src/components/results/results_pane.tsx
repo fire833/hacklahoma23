@@ -1,13 +1,15 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./results.module.css";
 import * as graphviz from "d3-graphviz";
 import DebugBar from "./debug_bar";
+import { GraphContext, GraphNodeID } from "../lang/graph";
 
 export const ResultsDiv = "results-div";
 
 export interface ResultsProps {
-    graph: string | null,
+    graph: GraphContext | null,
+    serializer: (ctx: GraphContext, hovered_node_id: string | null) => string,
     onCompile?: () => void,
     onRun?: () => void,
     onResume?: () => void,
@@ -18,13 +20,39 @@ export interface ResultsProps {
 // Primary pane for viewing results.
 export default function ResultsPane(props: ResultsProps) {
 
+    const [hoveredNodeId, setHoveredNodeId] = useState<GraphNodeID | null>(null);
+
     useEffect(() => {
+        console.log("In useeffect");
+        
         if(props.graph){    
             console.log("Updating graph with", props.graph);
-            
-            graphviz.graphviz("#" + ResultsDiv).dot(props.graph).onerror(e => console.error(e)).render();
+            let code = props.serializer(props.graph, hoveredNodeId);
+            graphviz.graphviz("#" + ResultsDiv).dot(code).onerror(e => console.error(e)).render();
         }
     });
+
+    useEffect(() => {
+        console.log("Setting hover listener");
+
+        console.log("Adding");
+        
+        
+        document.getElementById(ResultsDiv)?.addEventListener('mouseover', e => {
+            let parent: HTMLElement | null = (e.target as HTMLElement).parentElement;
+            
+            if (parent) {
+                if(parent.id.startsWith("graphnode_")) {
+                    let hoveredid = parent.id.replace("graphnode_", "");
+                    setHoveredNodeId(hoveredid);
+                    console.log("Hovering nodeid", hoveredid);
+                    
+                } else {
+                }
+            }
+
+        })
+    }, [])
 
     return (
         <div>

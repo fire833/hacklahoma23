@@ -299,16 +299,22 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
     return def.evaluate(state, ...applied_params);
 }
 
-export const run = (program: Program, initial_state: ProgramState, set_graph: (graph_source: string | null) => void) => {
-    let state = { ...initial_state };
+export const run = (program: Program, initial_state: ProgramState, set_graph: (ctx: GraphContext) => void) => {
 
-    while (state.instruction_pointer < program.length) {
-        let instruction = program[state.instruction_pointer];
-        state.instruction_pointer++;
-        instruction.evaluate(state);
-        console.log("State after eval is:", state);
-        set_graph(state.graph_context.serialize());
+    let inner = async () => {
+        let state = { ...initial_state };
+    
+        while (state.instruction_pointer < program.length) {
+            let instruction = program[state.instruction_pointer];
+            state.instruction_pointer++;
+            instruction.evaluate(state);
+            console.log("State after eval is:", state);
+            set_graph(state.graph_context);
+            await new Promise(resolve => setTimeout(resolve, 250));
+        }
     }
+
+    inner();
 }
 
 languages.register({
