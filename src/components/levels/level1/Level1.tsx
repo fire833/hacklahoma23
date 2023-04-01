@@ -46,6 +46,7 @@ export function Level1(props: Level1Props) {
                 }
             ]}
             ></EditorPane>
+            <span style={{width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)"}}></span>
             <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
                 if (!mountedEditor) throw "OnCompile called with no editor";
                 if (!monacoConst) throw "OnCompile called without monaco";
