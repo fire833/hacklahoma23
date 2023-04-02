@@ -9,16 +9,10 @@ import levelStyles from "../levels.module.css";
 import { LevelHeader } from "../LevelHeader";
 import { Level, Tab } from "../level/Level";
 
-export type Level1Props = {
-    active_level: number
-}
-
 const LEVEL_NUM = 1;
 const LUNCH_TIME = 1200
 
-export function Level1(props: Level1Props) {
-    if (props.active_level !== 1) return <></>;
-
+export function Level1() {
     const tabs: Tab[] = [{
         tab_kind: "react_node",
         tab_name: "Level 1",
@@ -32,7 +26,7 @@ export function Level1(props: Level1Props) {
     }
     ]
 
-    return <Level active_level={props.active_level} tabs={tabs} test_cases={[
+    return <Level tabs={tabs} test_cases={[
         {
             initial_graph_provider: () => new GraphContext({
                 "a": new GraphNode("a", 12700, [])

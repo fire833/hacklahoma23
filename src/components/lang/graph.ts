@@ -63,6 +63,11 @@ export class GraphContext {
 	graph: { [id: GraphNodeID]: GraphNode } = {};
 	active_node_id: GraphNodeID;
 	root_node_id: GraphNodeID;
+
+	// cached_id is for trasnitioning into a root execution block, by 
+	// temporarily switching the active node to the root node.
+	cached_active_node: GraphNodeID | undefined;
+
 	static serializers = {
 		"bfs": (ctx: GraphContext, hovered_node_id: GraphNodeID | null): string => {
 			let edge_strings: string[] = [];
@@ -138,12 +143,20 @@ export class GraphContext {
 		this.root_node_id = root_id;
 	}
 
+	// Used for implementing traverse into root.
 	enter_root_ctx() {
-
+		if (this.cached_active_node === undefined) {
+			this.cached_active_node = this.active_node_id;
+			this.active_node_id = this.root_node_id;
+		}
 	}
 
+	// Used for implementing tarverse out of root to old active node.
 	exit_root_ctx() {
-
+		if (this.cached_active_node !== undefined) {
+			this.active_node_id = this.cached_active_node;
+			this.cached_active_node = undefined;
+		}
 	}
 
 	// public-facing instruction implementations

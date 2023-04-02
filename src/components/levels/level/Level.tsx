@@ -8,8 +8,6 @@ import ResultsPane from "../../results/results_pane";
 import { TestCase, compile } from "../../lang/lang";
 import levelStyles from "../levels.module.css";
 
-
-
 export type Tab_Editor = {
     tab_kind: "editor",
     tab_name: "Editor"
@@ -24,13 +22,10 @@ export type Tab_ReactNode = {
 export type Tab = Tab_Editor | Tab_ReactNode
 
 export interface LevelProps {
-    active_level: number,
     tabs: Tab[],
     test_cases: TestCase[]
 }
-export function Level(props: LevelProps){
-    
-
+export function Level(props: LevelProps) {
     const monacoConst = useMonaco();
 
     const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
@@ -40,8 +35,6 @@ export function Level(props: LevelProps){
     const [loadedTestCase, setLoadedTestCase] = useState(0);
 
     const [runningSourceLine, setRunningSourceLine] = useState<number | null>(null);
-
-    if (props.active_level !== 1) return <></>;
 
     return <div className={levelStyles.levelWrapper}>
         <LevelHeader></LevelHeader>

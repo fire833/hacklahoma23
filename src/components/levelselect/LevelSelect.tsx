@@ -1,16 +1,10 @@
 import styles from "./LevelSelect.module.css"
-
-
-export interface LevelSelectProps {
-    currentTab: number,
-    setCurrentTab: (num: number) => void
-}
+import { useNavigate } from 'react-router-dom'
 
 export const NUM_LEVELS = 10;
 
-export function LevelSelect(props: LevelSelectProps) {
-
-    if(props.currentTab !== -1) return <></>;
+export function LevelSelect() {
+    const navigate = useNavigate();
 
     return <div className={styles.levelSelectWrapper}>
         <h1>Escape From A-77</h1>
@@ -18,7 +12,9 @@ export function LevelSelect(props: LevelSelectProps) {
 
         <div className={styles.buttonGrid}>
             {new Array(NUM_LEVELS).fill(0).map((_, ind) => {
-                return <button key={ind} onClick={() => props.setCurrentTab(ind + 1)}>{ind + 1}</button>
+                return <button key={ind} onClick={() => {
+                    navigate(`/level${ind + 1}`);
+                }}>{ind + 1}</button>
             })}
         </div>
 

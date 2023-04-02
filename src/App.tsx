@@ -11,11 +11,10 @@ import { LANG_COMPLETIONS, LANG_DEF, LANG_HOVER, LANG as LANG_NAME, compile, run
 import { GraphContext, GraphNode, GraphNodeID, SerializerKey } from './components/lang/graph'
 import { LevelSelect } from './components/levelselect/LevelSelect'
 import { Level1 } from './components/levels/level1/Level1'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
-
   const monacoConst = useMonaco();
-
 
   useEffect(() => {
     if (monacoConst) {
@@ -33,15 +32,14 @@ function App() {
     }
   }, [monacoConst]);
 
-
-
-  const [currentTab, setCurrentTab] = useState<number>(-1);
-
-
   return <>
     <div className={styles.appWrapper}>
-      <LevelSelect currentTab={currentTab} setCurrentTab={setCurrentTab}></LevelSelect>
-      <Level1 active_level={currentTab}></Level1>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<LevelSelect />} />
+          <Route path='/level1' element={<Level1 />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   </>
 }
