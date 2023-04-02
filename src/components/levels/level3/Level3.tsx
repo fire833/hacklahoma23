@@ -21,8 +21,7 @@ const LEVEL_NUM = 3;
 // TRAVERSE 0
 // loop: BUBBLE $MATH_ADD $VALUE -1
 // TRAVERSE 1
-// GOTO_IF_NEQ loop: $VALUE 0
-// EXIT_IF_EQ $VALUE 0
+// GOTO_IF_NEQ loop: $VALUE 1
 
 export function Level3() {
 
