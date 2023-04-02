@@ -12,7 +12,11 @@ import { TestCaseLoader } from "../TestCaseLoader";
 import { ReferenceTab } from "../reference/reference";
 
 const LEVEL_NUM = 1;
-const LUNCH_TIME = 1200
+const LUNCH_TIME = 1200;
+
+// SOLUTION
+//
+// SET 1200
 
 export function Level1() {
 
@@ -77,14 +81,14 @@ export function Level1() {
             <p>
                 You wonder if there is a way to modify the timer in order to get out of your cell
                 early. As you are rooting around in your computer, you find a program called <i>tedit</i> (your initial program state
-                to the right). You wonder if you can set the primary register (the root/active node) to 0, then maybe your door will
+                to the right). You wonder if you can set the primary register (the root/active node) to 1200, then maybe your door will
                 open.
             </p>
             <h4>Goals/Objectives</h4>
             <p>
                 The goal for this challenge is to assign values to nodes with the <i>SET</i> instruction. You can do this by writing
             </p>
-            <b>SET 0</b>
+            <b>SET 1200</b>
             <p>
                 Within your program terminal, and try and run it. If your graph pane lights up green, then you the register was successfully
                 set to zero and your door opened!
