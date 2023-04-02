@@ -42,7 +42,7 @@ export function Level5() {
         tab_kind: "react_node",
         tab_name: "📒 Level 5",
         node: <div style={{ padding: "2%" }}>
-            <h1>Level 2 - Teaching Counting</h1>
+            <h1>Level 5 - Teaching Addition</h1>
             <p>
                 As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
                 to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
