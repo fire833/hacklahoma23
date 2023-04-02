@@ -46,12 +46,10 @@ export default function ResultsPane(props: ResultsProps) {
     const [hoveredNodeId, setHoveredNodeId] = useState<GraphNodeID | null>(null);
     const [displayedGraph, setDisplayedGraph] = useState<[GraphContext] | null>([props.test_cases[0].initial_graph_provider()]);
     const [instructionDelay, setInstructionDelay] = useState(500);
-    const [isRunPaused, setIsRunPaused] = useState(false);
-    const [isRunStopped, setIsRunStopped] = useState(false);
-    const [hasStepQueued, setHasStepQueued] = useState(false);
-    const [isRunning, setIsRunning] = useState(false);
     const [runHooks, setRunHooks] = useState<null | RunHooks>(null);
     const [completed, setCompleted] = useState(false);
+    const [isProgramActive, setIsProgramActive] = useState(false);
+    const [playPauseButtonState, setPlayPauseButtonState] = useState<"setPlaying" | "setPausing">("setPausing");
 
     const init_run = () => {
         if (!props.mountedEditor) throw "OnCompile called with no editor";
@@ -89,15 +87,17 @@ export default function ResultsPane(props: ResultsProps) {
                 if (predicate_evals.every(e => e)) {
                     setCompleted(true);
                 }
-                
+                setIsProgramActive(false);
             }
         }
 
         let runHooks: RunHooks = {
             play: () => {
+                setPlayPauseButtonState("setPausing")
                 loop();
             },
             pause: () => {
+                setPlayPauseButtonState("setPlaying");
                 clearTimeout(timeoutHandle);
             },
             step: () => {
@@ -112,6 +112,7 @@ export default function ResultsPane(props: ResultsProps) {
         }
 
         setRunHooks(runHooks);
+        setIsProgramActive(true);
 
         return runHooks;
     
@@ -136,12 +137,7 @@ export default function ResultsPane(props: ResultsProps) {
         }
     }, [displayedGraph, props.serializer, hoveredNodeId]);
 
-    useEffect(() => {
-        console.log("Setting hover listener");
-
-        console.log("Adding");
-        
-        
+    useEffect(() => {    
         document.getElementById(ResultsDiv)?.addEventListener('mouseover', e => {
             let parent: HTMLElement | null = (e.target as HTMLElement).parentElement;
             
@@ -158,7 +154,7 @@ export default function ResultsPane(props: ResultsProps) {
 
     return (
         <div className={styles.resultsWrapper}>
-            <DebugBar onCompile={onCompile} onPlay={runHooks?.play} onPause={runHooks?.pause}
+            <DebugBar isProgramActive={isProgramActive} playPauseButtonState={playPauseButtonState} onCompile={onCompile} onPlay={runHooks?.play} onPause={runHooks?.pause}
                 setExecutionDelay={(delay) => {
                     setInstructionDelay(delay)
                     runHooks?.setInstructionDelay(delay);

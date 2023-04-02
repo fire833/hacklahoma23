@@ -8,6 +8,8 @@ export interface DebugBarProps {
     onPause?: () => void
     setExecutionDelay?: (delay: number) => void,
     onStep?: () => void,
+    playPauseButtonState: "setPlaying" | "setPausing",
+    isProgramActive: boolean
 }
 
 export default function DebugBar(props: DebugBarProps) {
@@ -33,14 +35,22 @@ export default function DebugBar(props: DebugBarProps) {
 
     return (
         <div className={styles.debug}
-            // onDragStart={(e) => { handleDrag(e); e.dataTransfer.setDragImage(document.createElement("div"), xCoord, yCoord); }}
-            // onDrag={handleDrag}
-            // onDragEnd={handleDrag}
+        // onDragStart={(e) => { handleDrag(e); e.dataTransfer.setDragImage(document.createElement("div"), xCoord, yCoord); }}
+        // onDrag={handleDrag}
+        // onDragEnd={handleDrag}
         >
-            <button onClick={props.onCompile}>Compile</button>
-            <button onClick={props.onPlay}>Play</button>
-            <button onClick={props.onPause}>Pause</button>
-            <button onClick={props.onStep}>Step</button>
+            <button onClick={props.onCompile}>Compile and Run</button>
+            <button
+                disabled={props.playPauseButtonState === "setPausing" && !props.isProgramActive }
+                onClick={() => {
+                    if (props.playPauseButtonState === "setPlaying") {
+                        if (props.onPlay) props.onPlay();
+                    } else {
+                        if (props.onPause) props.onPause();
+                    }
+
+                }}> {props.playPauseButtonState === "setPlaying" ? "Play" : "Pause"} </button>
+            <button onClick={props.onStep} disabled={!props.isProgramActive}>Step</button>
             <input type="range" onChange={(e) => {
                 if (props.setExecutionDelay) {
                     props.setExecutionDelay((100 - parseInt(e.currentTarget.value)) * 20);
