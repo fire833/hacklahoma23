@@ -8,6 +8,7 @@ export interface DebugBarProps {
     onPause?: () => void
     setExecutionDelay?: (delay: number) => void,
     onStep?: () => void,
+    onStop?: () => void,
     playPauseButtonState: "setPlaying" | "setPausing",
     isProgramActive: boolean
 }
@@ -39,7 +40,7 @@ export default function DebugBar(props: DebugBarProps) {
         // onDrag={handleDrag}
         // onDragEnd={handleDrag}
         >
-            <button onClick={props.onCompile}>Compile and Run</button>
+            <button onClick={props.onCompile} disabled={props.isProgramActive && props.playPauseButtonState === "setPausing"}>{(props.isProgramActive && props.playPauseButtonState === "setPausing") ? "Running" : "Compile and Run"}</button>
             <button
                 disabled={props.playPauseButtonState === "setPausing" && !props.isProgramActive }
                 onClick={() => {

@@ -39,8 +39,10 @@ export default function ResultsPane(props: ResultsProps) {
     const monacoConst = useMonaco();
 
     const onCompile = () => {
-        let run_hooks = init_run();
-        run_hooks.play();
+        if(!isProgramActive || playPauseButtonState === "setPlaying"){
+            let run_hooks = init_run();
+            run_hooks.play();
+        }
     }
 
     const [hoveredNodeId, setHoveredNodeId] = useState<GraphNodeID | null>(null);
@@ -105,6 +107,7 @@ export default function ResultsPane(props: ResultsProps) {
             },
             stop: () => {
                 clearTimeout(timeoutHandle);
+                setIsProgramActive(false);
             },
             setInstructionDelay: (delay: number) => {
                 instruction_delay = delay;
@@ -158,7 +161,7 @@ export default function ResultsPane(props: ResultsProps) {
                 setExecutionDelay={(delay) => {
                     setInstructionDelay(delay)
                     runHooks?.setInstructionDelay(delay);
-                }} onStep={runHooks?.step} />
+                }} onStep={runHooks?.step} onStop={runHooks?.stop} />
             <div id={ResultsDiv} className={styles.results_div + " " + (completed ? styles.correct : "")} />
         </div>
     )
