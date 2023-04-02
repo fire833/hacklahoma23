@@ -64,15 +64,19 @@ export function Level2() {
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
+                The goal for this challenge is to create a linked list of numbers within the memory graph (the right panel), starting from 0, and going up to 3 (but not including 3).
                 You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
             </p>
             <b>BUBBLE N</b> <br/>
-            <b>TRAVERSE 0</b> <br/>
+            <b>TRAVERSE $MATH_ADD $NUM_NEIGHBORS -1</b> <br/>
             <p>
-                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
-                for our counting system!
+                <b>BUBBLE</b> creates a new node with the given value.
+                When you call <b>BUBBLE</b>, the new node is added as the last neighbor to the current node.
+            </p>
+            <p>
+                A node in the memory graph has a list of neighbors which are ordered.
+                A node's 0th neighbor will always be the node that created it (unless it is the root).
+                The <b>TRAVERSE N</b> function will move to the active node's neighbor at index N.
             </p>
         </div>
     }, EditorTab,
