@@ -12,6 +12,7 @@ import { GraphContext, GraphNode, GraphNodeID, SerializerKey } from './component
 import { LevelSelect } from './components/levelselect/LevelSelect'
 import { Level1 } from './components/levels/level1/Level1'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Level2 } from './components/levels/level2/Level2'
 
 function App() {
   const monacoConst = useMonaco();
@@ -38,6 +39,7 @@ function App() {
         <Routes>
           <Route path='/' element={<LevelSelect />} />
           <Route path='/level1' element={<Level1 />} />
+          <Route path='/level2' element={<Level2 />} />
         </Routes>
       </BrowserRouter>
     </div>
