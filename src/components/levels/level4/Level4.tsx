@@ -19,11 +19,34 @@ export function Level4() {
     const test_cases: TestCase[] = [
         {
             initial_graph_provider: () => {
-                return new GraphContext({"a": new GraphNode("a", 0)}, "a");
+                return new GraphContext({"a": new GraphNode("a", 16)}, "a");
             },
             solution_predicates: [
                 (graph) => {
-                    return (graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 3)                    
+                    if (!(Object.values(graph.graph).length === 16)) throw "Graph must have 16 nodes";
+                    return (graph.graph[graph.active_node_id].value === 16 && graph.graph[graph.root_node_id].value === 0)
+                },
+            ],
+        },
+        {
+            initial_graph_provider: () => {
+                return new GraphContext({"a": new GraphNode("a", 13)}, "a");
+            },
+            solution_predicates: [
+                (graph) => {
+                    if (!(Object.values(graph.graph).length === 13)) throw "Graph must have 13 nodes";
+                    return (graph.graph[graph.active_node_id].value === 13 && graph.graph[graph.root_node_id].value === 0)
+                },
+            ],
+        },
+        {
+            initial_graph_provider: () => {
+                return new GraphContext({"a": new GraphNode("a", 12)}, "a");
+            },
+            solution_predicates: [
+                (graph) => {
+                    if (!(Object.values(graph.graph).length === 12)) throw "Graph must have 12 nodes";
+                    return (graph.graph[graph.active_node_id].value === 12 && graph.graph[graph.root_node_id].value === 0)
                 },
             ],
         },
@@ -53,15 +76,18 @@ export function Level4() {
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
-                You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
+                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to N.
+                You can implement this using the <b>BUBBLE</b>, <b>TRAVERSE</b>, <b>GOTO_IF_NEQ</b> instructions like before, but you will need to perform
+                comparisons to the root node with the <b>ROOT</b> instruction as well. You can follow a pattern similar to the following: 
+                You can follow a pattern similar to
             </p>
-            <b>BUBBLE N</b> <br/>
-            <b>TRAVERSE 0</b> <br/>
+            <b>loop: BUBBLE $MATH_ADD $VALUE 1</b> <br/>
+            <b>TRAVERSE 1</b> <br/>
+            <b>GOTO_IF_NEQ $VALUE 0</b> <br/>
             <p>
                 Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
-                for our counting system!
+                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend can help out his Jawa
+                herder friends!
             </p>
         </div>
     }, EditorTab,
