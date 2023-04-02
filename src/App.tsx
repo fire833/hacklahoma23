@@ -21,6 +21,7 @@ import { Level7 } from './components/levels/level7/Level7'
 import { Level8 } from './components/levels/level8/Level8'
 import { Level9 } from './components/levels/level9/Level9'
 import { Level10 } from './components/levels/level10/Level10'
+import { AppContext } from './context/context'
 
 function App() {
   const monacoConst = useMonaco();
@@ -41,25 +42,35 @@ function App() {
     }
   }, [monacoConst]);
 
+
+  let [completedLevels, setCompletedLevels] = useState<number[]>([]);
+
+
+
   return <>
-    <div className={styles.appWrapper}>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<LevelSelect />} />
-          <Route path='/level1' element={<Level1 />} />
-          <Route path='/level2' element={<Level2 />} />
-          <Route path='/level3' element={<Level3 />} />
-          <Route path='/level4' element={<Level4 />} />
-          <Route path='/level5' element={<Level5 />} />
-          <Route path='/level6' element={<Level6 />} />
-          <Route path='/level7' element={<Level7 />} />
-          <Route path='/level8' element={<Level8 />} />
-          <Route path='/level9' element={<Level9 />} />
-          <Route path='/level10' element={<Level10 />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
-  </>
+    <AppContext.Provider value={{
+      completedLevels: completedLevels,
+      setCompletedLevels: setCompletedLevels
+    }}>
+      <div className={styles.appWrapper}>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<LevelSelect />} />
+            <Route path='/level1' element={<Level1 />} />
+            <Route path='/level2' element={<Level2 />} />
+            <Route path='/level3' element={<Level3 />} />
+            <Route path='/level4' element={<Level4 />} />
+            <Route path='/level5' element={<Level5 />} />
+            <Route path='/level6' element={<Level6 />} />
+            <Route path='/level7' element={<Level7 />} />
+            <Route path='/level8' element={<Level8 />} />
+            <Route path='/level9' element={<Level9 />} />
+            <Route path='/level10' element={<Level10 />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </AppContext.Provider>
+    </>
 }
 
 export default App

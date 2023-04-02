@@ -101,14 +101,11 @@ export function Level1() {
     {
         tab_kind: "react_node",
         tab_name: "🧪 Test Cases",
-        node: <div style={{height: "200vh"}}>
-
-        </div> 
-        // <div style={{ paddingLeft: "1em" }}>
-        //     {test_cases.map((e, ind) => <div>
-        //         <TestCaseLoader activate={() => setLoadedTestCase(ind)} index={ind} testCase={e} isActive={loadedTestCase === ind} isComplete={correctTestCases.indexOf(ind) !== -1}></TestCaseLoader>
-        //     </div>)}
-        // </div>
+        node: <div style={{ paddingLeft: "1em" }}>
+                {test_cases.map((e, ind) => <div>
+                    <TestCaseLoader activate={() => setLoadedTestCase(ind)} index={ind} testCase={e} isActive={loadedTestCase === ind} isComplete={correctTestCases.indexOf(ind) !== -1}></TestCaseLoader>
+                </div>)}
+            </div>
     },
         ReferenceTab
     ];
