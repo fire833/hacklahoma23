@@ -34,7 +34,6 @@ export default function EditorPane(props: EditorPaneProps) {
 
     let lastDecorations = useRef<string[]>([]);
     useEffect(() => {
-        
         if(props.mountedEditor){
             if(props.runningSourceLine !== null) {
                 console.log("Bolding running sourceline " + props.runningSourceLine);
@@ -57,6 +56,7 @@ export default function EditorPane(props: EditorPaneProps) {
             }
         }
     }, [props.mountedEditor, props.runningSourceLine]);
+
 
     return (<div className={styles.editorWrapper}>
         <div className={levelStyles.tabRow}>

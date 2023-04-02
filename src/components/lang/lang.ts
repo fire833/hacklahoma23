@@ -310,6 +310,10 @@ export const LANG_COMPLETIONS: languages.CompletionItemProvider = {
                 let item: languages.CompletionItem = {
                     label: func_name,
                     kind: languages.CompletionItemKind.Function,
+                    command: {
+                        id: "editor.action.showHover",
+                        title: "Show Hover",
+                    },
                     insertText: func_name,
                     range
                 }
