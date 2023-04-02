@@ -205,7 +205,7 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         hover_md_lines: [
             []
         ]
-        
+
     }
 }
 
@@ -426,7 +426,7 @@ function parseLine(line: TokenWithValue[]): Instruction {
     return {
         evaluate: (state: ProgramState) => {
             let old_active_node = state.graph_context.active_node_id;
-            if(function_name === "ROOT") {
+            if (function_name === "ROOT") {
                 state.graph_context.active_node_id = state.graph_context.root_node_id
             }
             let result = apply(function_definition, params, state);

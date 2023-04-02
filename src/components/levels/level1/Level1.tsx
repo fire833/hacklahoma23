@@ -4,7 +4,7 @@ import ResultsPane from "../../results/results_pane";
 import { editor } from "monaco-editor";
 import { GraphContext, GraphNode, SerializerKey } from "../../lang/graph";
 import { useMonaco } from "@monaco-editor/react";
-import { compile, run } from "../../lang/lang";
+import { compile } from "../../lang/lang";
 import levelStyles from "../levels.module.css";
 import { LevelHeader } from "../LevelHeader";
 import { Level, Tab } from "../level/Level";
