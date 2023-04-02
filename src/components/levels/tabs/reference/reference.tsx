@@ -1,4 +1,4 @@
-import { Tab_ReactNode } from "../level/Level";
+import { Tab_ReactNode } from "../../level/Level";
 
 export const ReferenceTab: Tab_ReactNode = {
 	tab_name: "🔎 Reference",

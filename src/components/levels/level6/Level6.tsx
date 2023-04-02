@@ -9,7 +9,8 @@ import levelStyles from "../levels.module.css";
 import { LevelHeader } from "../LevelHeader";
 import { Level, Tab } from "../level/Level";
 import { TestCaseLoader } from "../TestCaseLoader";
-import { ReferenceTab } from "../reference/reference";
+import { ReferenceTab } from "../tabs/reference/reference";
+import { EditorTab } from "../tabs/editor/editor";
 
 const LEVEL_NUM = 6;
 
@@ -39,7 +40,7 @@ export function Level6() {
 
     const tabs: Tab[] = [{
         tab_kind: "react_node",
-        tab_name: "Level 6",
+        tab_name: "📒 Level 6",
         node: <div style={{ padding: "2%" }}>
             <h1>Level 2 - Teaching Counting</h1>
             <p>
@@ -64,13 +65,10 @@ export function Level6() {
                 for our counting system!
             </p>
         </div>
-    }, {
-        tab_kind: "editor",
-        tab_name: "Editor"
-    },
+    }, EditorTab,
     {
         tab_kind: "react_node",
-        tab_name: "Test Cases",
+        tab_name: "🧪 Test Cases",
         node: <div style={{ padding: "1em" }}>
             {test_cases.map((e, ind) => <div>
                 <TestCaseLoader activate={() => setLoadedTestCase(ind)} index={ind} testCase={e} isActive={loadedTestCase === ind} isComplete={correctTestCases.indexOf(ind) !== -1}></TestCaseLoader>
