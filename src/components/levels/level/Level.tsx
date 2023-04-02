@@ -1,7 +1,7 @@
 import { useMonaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import { ReactNode, useState } from "react";
-import { GraphContext, GraphNode, SerializerKey } from "../../lang/graph";
+import { GraphContext, GraphNode, GraphSerializer, SerializerKey } from "../../lang/graph";
 import { LevelHeader } from "../LevelHeader";
 import EditorPane from "../../editor/editor_pane";
 import ResultsPane from "../../results/results_pane";
@@ -28,7 +28,8 @@ export interface LevelProps {
     setLoadedTestCase: (num: number) => void,
     completeCase: (num: number) => void,
     completedTestCased: number[],
-    levelIndex: number
+    levelIndex: number,
+    serializer?: GraphSerializer | ((params: any[]) => GraphSerializer)
 }
 export function Level(props: LevelProps) {
     const monacoConst = useMonaco();

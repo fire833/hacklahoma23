@@ -57,6 +57,7 @@ export class GraphNode {
 }
 
 export type SerializerKey = keyof typeof GraphContext.serializers;
+export type GraphSerializer = (ctx: GraphContext, hovered_node_id: GraphNodeID | null) => string;
 
 // GraphContext is the primary data structure to store graph execution state.
 export class GraphContext {
@@ -78,9 +79,10 @@ export class GraphContext {
 			// First, register all nodes
 			let node_strings = Object.values(ctx.graph).map(node => {
 
-				let peripheries = node.id === ctx.root_node_id ? "peripheries=2" : ""
+				let peripheries = node.id === ctx.root_node_id ? "peripheries=2" : "";
+				let highlight = node.id === ctx.active_node_id ? "penwidth=3" : "";
 
-				return `${node.id} [label="${node.value}" id="graphnode_${node.id}" shape=circle ${peripheries}]`;
+				return `${node.id} [label="${node.value}" id="graphnode_${node.id}" shape=circle ${peripheries} ${highlight}]`;
 			})
 
 			ctx.bfs((node, visited, queued) => {

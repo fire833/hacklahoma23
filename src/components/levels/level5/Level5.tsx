@@ -12,6 +12,7 @@ import { TestCaseLoader } from "../TestCaseLoader";
 import { ReferenceTab } from "../tabs/reference/reference";
 import { EditorTab } from "../tabs/editor/editor";
 import { AppContext } from "../../../context/context";
+import { StaticGraph } from "../StaticGraph";
 
 const LEVEL_NUM = 5;
 
@@ -68,17 +69,83 @@ export function Level5() {
                 to collect on his home planet.
             </p>
             <p>
-                You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
-                show him how to count with the Arabic numerals.
+                You decide to give your Wookie friend a quick tutorial on Earth addition,
+                and yet again decide to equip them with a program for all of their Trandoshan accounting needs.
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to sum the values of two linked lists (your graph input), with each node value being the 100s, 
-                10s, and 1s place for the input numbers, and output a single linked-list where the combined values equal to the sum.
+                Your program will begin with a linked list, representing a 3 digit base-10 number.
+                This linked list is formed by the 1'th neighbor of every node from root.
+                Attached to each of these nodes (at neighbor index 2), is the corresponding
+                digit of the other number to add.
+            </p>
+            <p>
+                Your program should take this graph and collapse it down to a linked list of 3 nodes,
+                each with one digit of the sum of the two numbers.
+            </p>
+            <p>
+                For example, you may recieve this graph:
+            </p>
+            <StaticGraph uid={"p5graph"} ctx={new GraphContext({}, "")} serializer={() => {
+                return `
+                graph {
+                    subgraph {
+                        rank = same
+                        1 [peripheries=2]
+                        1 -- 2
+                        2 -- 3
+                    }
 
-                For example, if your input linked lists are (1, 2, 3) and (4, 5, 6), that would be equivalent to summing 123 + 456 = 579, and 
-                the equivalent output linked-list should be (5, 7, 9). You should be able to handle carries for sums of digits which are greater than
-                or equal to 10. Input and output numbers will always be 3 digits in length. Keep this in mind when writing your algorithm.
+                    subgraph {
+                        rank = same
+                        4
+                        5
+                    }
+
+                    1 -- 4
+                    2 -- 5
+                    3 -- 6
+                }
+                `
+            }}></StaticGraph>
+
+            <p>
+                1 is the root node, and has 2 as its index 1 neighbor, and 4 as its index 2 neighbor.
+                Your program should output the following graph:
+            </p>
+            <StaticGraph uid={"p5graph2"} ctx={new GraphContext({}, "")} serializer={() => {
+                return `
+                graph {
+                    subgraph {
+                        rank = same
+                        5 [peripheries=2]
+                        5 -- 7
+                        7 -- 9
+                    }
+                }
+                `
+            }}></StaticGraph>
+
+            <p>
+            Note that the graph will be laid out as a tree,
+            but the semantics are the same.
+            The equivalent rendering is:
+            </p>
+            <div style={{marginLeft: "25%"}}>
+                <StaticGraph width="50%" uid={"p5graph5"} ctx={new GraphContext({}, "")} serializer={() => {
+                    return `
+                    graph {
+                        1 -- 2
+                        1 -- 4
+                        2 -- 3
+                        2 -- 5
+                        3 -- 6
+                    }
+                    `
+                }}></StaticGraph>
+            </div>
+            <p>
+                This is equivalent to 123 + 456 as before.
             </p>
             <p>
                 Please refer to the test cases in the test-cases tab in order to get a better idea of what your input graphs will look like, and
