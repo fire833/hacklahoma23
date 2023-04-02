@@ -202,7 +202,7 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
     },
     "GOTO": {
         evaluate: (state: ProgramState, label: string) => {
-            let lines_with_label = state.program.map((e, ind) => [e, ind]).filter(e => (e[0] as Instruction).label === label);
+            let lines_with_label = state.program.map((e, ind) => [e, ind] as [Instruction, number]).filter(([line, index]) => line.label === label)
             if (lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
             state.instruction_pointer = (lines_with_label[0][1] as number);
         },
@@ -265,7 +265,7 @@ export const LANG_DEF: languages.IMonarchLanguage = {
     keywords: Object.keys(FunctionDefinitions),
     tokenizer: {
         root: [
-            [/^[a-zA-Z]+:/, "tag"],
+            [/[a-zA-Z]+:/, "tag"],
             [/-?[0-9]+/, "constant"],
             [/[A-Z$]\w+/, {
                 cases: {
@@ -368,7 +368,7 @@ export function augmentLineTokensWithValue(line: Token[], sourceLine: string, so
         let value = sourceLine.substring(token.offset, next_token.offset);
         let tokenWithValue: TokenWithValue = {
             ...token,
-            value,
+            value: value.trim(),
             source_line: source_line_ind
         }
         tokensWithValue.push(tokenWithValue);
@@ -380,7 +380,7 @@ export function augmentLineTokensWithValue(line: Token[], sourceLine: string, so
         let last_value = sourceLine.substring(last_token.offset);
         tokensWithValue.push({
             ...last_token,
-            value: last_value,
+            value: last_value.trim(),
             source_line: source_line_ind
         });
     }
