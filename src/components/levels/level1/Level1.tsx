@@ -87,7 +87,6 @@ export function Level1() {
         if(Array.from(new Set(newCorrectCases)).length === test_cases.length) {
             context.setCompletedLevels([...context.completedLevels, LEVEL_NUM - 1]);
             console.log("Finished all cases, updating context!");
-            
         }
     }
 

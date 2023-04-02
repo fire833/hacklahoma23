@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import EditorPane from "../../editor/editor_pane";
 import ResultsPane from "../../results/results_pane";
 import { editor } from "monaco-editor";
@@ -11,6 +11,7 @@ import { Level, Tab } from "../level/Level";
 import { TestCaseLoader } from "../TestCaseLoader";
 import { ReferenceTab } from "../tabs/reference/reference";
 import { EditorTab } from "../tabs/editor/editor";
+import { AppContext } from "../../../context/context";
 
 const LEVEL_NUM = 8;
 
@@ -33,8 +34,19 @@ export function Level8() {
 
     const [correctTestCases, setCorrectTestCases] = useState<number[]>([]);
 
+    
+    const context = useContext(AppContext);
+
+
     function completeCase(number: number) {
-        setCorrectTestCases([...correctTestCases, number]);
+        let newCorrectCases = [...correctTestCases, number];
+        console.log("Calling completeCase");
+        
+        setCorrectTestCases(newCorrectCases);
+        if(Array.from(new Set(newCorrectCases)).length === test_cases.length) {
+            context.setCompletedLevels([...context.completedLevels, LEVEL_NUM - 1]);
+            console.log("Finished all cases, updating context!");
+        }
     }
 
 
