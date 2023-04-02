@@ -205,7 +205,7 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
     "GOTO": {
         evaluate: (state: ProgramState, label: string) => {
             let lines_with_label = state.program.map((e, ind) => [e, ind] as [Instruction, number]).filter(([line, index]) => line.label === label)
-            if (lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
+            if (lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.toString().endsWith(":") ? "" : " All labels must end with a colon. Maybe you meant `" + label + ":`?")
             state.instruction_pointer = (lines_with_label[0][1] as number);
         },
         hover_md_lines: [
@@ -416,6 +416,11 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): { param
 
     while (unsatisfied_params > 0) {
         let current_param = args[current_param_idx];
+        if(current_param === undefined) {
+            throw {
+                source_line: args[0].source_line,
+                error: "Not enough parameters to satisfy function " + function_name};
+        }
         if (current_param.type === `constant.${LANG}`) {
             evaluated_params.push(parseInt(current_param.value));
             current_param_idx++;
@@ -468,7 +473,10 @@ function parseLine(line: TokenWithValue[]): Instruction {
     // Then the function name
     let function_token = line[current_token_idx];
     if (function_token.type !== `keyword.${LANG}`) {
-        throw `Expected a function name, got ${function_token.type}`;
+        throw {
+            source_line: function_token.source_line,
+            error: `Expected a function name, got "${function_token.value}"` + (FunctionDefinitions[function_token.value.toUpperCase()] !== undefined ? ". Did you mean to all capitalize " + (function_token.value.toUpperCase()) + "?" : "")
+        };
     }
     let function_name = line[current_token_idx].value;
     let function_definition = FunctionDefinitions[function_name];

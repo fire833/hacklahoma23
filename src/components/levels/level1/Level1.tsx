@@ -31,6 +31,10 @@ export function Level1() {
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
                     let only_node = graph.graph[Object.keys(graph.graph)[0]];
+                    let is_lunchtime = only_node.value === LUNCH_TIME;
+                    if (!is_lunchtime) {
+                        throw ("The graph's node must have value " + LUNCH_TIME);
+                    }
                     return only_node.value === LUNCH_TIME;
                 }
             ]
@@ -43,6 +47,10 @@ export function Level1() {
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
                     let only_node = graph.graph[Object.keys(graph.graph)[0]];
+                    let is_lunchtime = only_node.value === LUNCH_TIME;
+                    if (!is_lunchtime) {
+                        throw ("The graph's node must have value " + LUNCH_TIME);
+                    }
                     return only_node.value === LUNCH_TIME;
                 }
             ]
@@ -55,6 +63,10 @@ export function Level1() {
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
                     let only_node = graph.graph[Object.keys(graph.graph)[0]];
+                    let is_lunchtime = only_node.value === LUNCH_TIME;
+                    if (!is_lunchtime) {
+                        throw ("The graph's node must have value " + LUNCH_TIME);
+                    }
                     return only_node.value === LUNCH_TIME;
                 }
             ]

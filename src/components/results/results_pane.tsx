@@ -6,7 +6,7 @@ import * as transition from "d3-transition";
 import DebugBar from "./debug_bar";
 import { GraphContext, GraphNodeID } from "../lang/graph";
 import { Program, ProgramState, TestCase, compile } from "../lang/lang";
-import { editor } from "monaco-editor";
+import { MarkerSeverity, editor } from "monaco-editor";
 import { useMonaco } from "@monaco-editor/react";
 
 export const ResultsDiv = "results-div";
@@ -41,9 +41,11 @@ export default function ResultsPane(props: ResultsProps) {
     const monacoConst = useMonaco();
 
     const onCompile = () => {
-        if(!isProgramActive || playPauseButtonState === "setPlaying"){
+        if (!isProgramActive || playPauseButtonState === "setPlaying") {
             let run_hooks = init_run();
-            run_hooks.play();
+            if(run_hooks){
+                run_hooks.play();
+            }
         }
     }
 
@@ -54,14 +56,15 @@ export default function ResultsPane(props: ResultsProps) {
     const [completed, setCompleted] = useState(false);
     const [isProgramActive, setIsProgramActive] = useState(false);
     const [playPauseButtonState, setPlayPauseButtonState] = useState<"setPlaying" | "setPausing">("setPausing");
+    const [lastErrorString, setLastErrorString] = useState<string | null>(null);
 
     useEffect(() => {
-        if(!isProgramActive || playPauseButtonState === "setPlaying") {
+        if (!isProgramActive || playPauseButtonState === "setPlaying") {
             let ctx = props.test_cases[props.loadedTestCase].initial_graph_provider();
             setDisplayedGraph([ctx]);
         }
 
-        if(props.completedTestCases.indexOf(props.loadedTestCase) === -1){
+        if (props.completedTestCases.indexOf(props.loadedTestCase) === -1) {
             setCompleted(false);
         }
     }, [props.loadedTestCase])
@@ -69,39 +72,88 @@ export default function ResultsPane(props: ResultsProps) {
     const init_run = () => {
         if (!props.mountedEditor) throw "OnCompile called with no editor";
         if (!monacoConst) throw "OnCompile called without monaco";
-        let program = compile(props.mountedEditor.getValue());
-        let state_provider = () => {return {
-            instruction_pointer: 0,
-            program: program,
-            graph_context: props.test_cases[props.loadedTestCase].initial_graph_provider()
-        }};
+        try {
+            var program = compile(props.mountedEditor.getValue());
+        } catch (exp: any) {
+            console.error("Got parsing error: ", exp);
+            let m = props.mountedEditor.getModel();
+            if(m){
+                console.log("Setting model markers");
+                
+                monacoConst.editor.setModelMarkers(m, "", [{
+                    startLineNumber: exp.source_line,
+                    endLineNumber: exp.source_line,
+                    startColumn: 1,
+                    endColumn: 100,
+                    message: exp.error,
+                    severity: MarkerSeverity.Error
+                }])
+            }
+            return false;
+        }
+        let state_provider = () => {
+            return {
+                instruction_pointer: 0,
+                program: program,
+                graph_context: props.test_cases[props.loadedTestCase].initial_graph_provider()
+            }
+        };
 
-        let graph_callback = (g: GraphContext) => {setDisplayedGraph([g])};
+        let graph_callback = (g: GraphContext) => { setDisplayedGraph([g]) };
 
         let state = state_provider();
 
         let instruction_delay = instructionDelay;
-        
+
         const step = () => {
             let instruction = program[state.instruction_pointer];
             props.setRunningSourceLine(program[state.instruction_pointer].source_line)
             state.instruction_pointer++;
-            instruction.evaluate(state);
+            try {
+                instruction.evaluate(state);
+            } catch (e: any) {
+                console.log("Threw error", e.toString());
+                
+                let m = props.mountedEditor?.getModel();
+                if(m){  
+                    monacoConst.editor.setModelMarkers(m, "", [
+                        {
+                            startLineNumber: instruction.source_line,
+                            endLineNumber: instruction.source_line,
+                            startColumn: 1,
+                            endColumn: 100,
+                            message: e.toString(),
+                            severity: MarkerSeverity.Error
+                        }
+                    ])
+
+                }
+            }
             graph_callback(state.graph_context);
         }
 
         let timeoutHandle: number = -1;
         const loop = () => {
-            if(state.instruction_pointer < program.length){
+            if (state.instruction_pointer < program.length) {
                 step();
                 timeoutHandle = setTimeout(() => {
                     loop();
                 }, instruction_delay);
             } else {
-                let predicate_evals = props.test_cases[props.loadedTestCase].solution_predicates.map(e => e(state.graph_context));
-                if (predicate_evals.every(e => e)) {
-                    setCompleted(true);
-                    props.completeTestCase(props.loadedTestCase);
+                console.log("About to eval tests");
+
+                try {
+                    console.log("Entered try");
+                    let predicate_evals = props.test_cases[props.loadedTestCase].solution_predicates.map(e => e(state.graph_context));
+                    console.log("Testing every", predicate_evals);
+
+                    if (predicate_evals.every(e => e)) {
+                        setCompleted(true);
+                        props.completeTestCase(props.loadedTestCase);
+                    }
+                } catch (exp: any) {
+                    setLastErrorString(exp.toString());
+                    // alert("Failed test case" + exp)
                 }
                 setIsProgramActive(false);
             }
@@ -130,19 +182,20 @@ export default function ResultsPane(props: ResultsProps) {
 
         setRunHooks(runHooks);
         setIsProgramActive(true);
+        setLastErrorString(null);
 
         return runHooks;
-    
+
     }
 
     useEffect(() => {
         console.log("In useeffect - rerendering");
-        
-        if(displayedGraph){    
+
+        if (displayedGraph) {
             console.log("Updating graph with", displayedGraph);
             let code = props.serializer(displayedGraph[0], hoveredNodeId);
             console.log("Rendering code", code);
-            
+
             let gz = graphviz
                 .graphviz("#" + ResultsDiv)
                 .zoomScaleExtent([0, 0.9])
@@ -154,15 +207,15 @@ export default function ResultsPane(props: ResultsProps) {
         }
     }, [displayedGraph, props.serializer, hoveredNodeId, props.loadedTestCase]);
 
-    useEffect(() => {    
+    useEffect(() => {
         document.getElementById(ResultsDiv)?.addEventListener('mouseover', e => {
             let parent: HTMLElement | null = (e.target as HTMLElement).parentElement;
-            
+
             if (parent) {
-                if(parent.id.startsWith("graphnode_")) {
+                if (parent.id.startsWith("graphnode_")) {
                     let hoveredid = parent.id.replace("graphnode_", "");
                     setHoveredNodeId(hoveredid);
-                    console.log("Hovering nodeid", hoveredid);   
+                    console.log("Hovering nodeid", hoveredid);
                 }
             }
 
@@ -176,6 +229,28 @@ export default function ResultsPane(props: ResultsProps) {
                     setInstructionDelay(delay)
                     runHooks?.setInstructionDelay(delay);
                 }} onStep={runHooks?.step} onStop={runHooks?.stop} />
+
+            {!!lastErrorString && (
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "white"
+                }}>
+                    <span style={{
+                        // color: "red",
+                        textAlign: "center",
+                        verticalAlign: "center",
+                        backgroundColor: "rgba(255, 0, 0, 0.1)",
+                        padding: "0.5em",
+                        border: "1px solid black"
+                    }}>
+                        <button style={{marginRight: "0.5em"}} onClick={() => setLastErrorString(null)}>x</button>
+
+                        {"Test Failed: " + lastErrorString}
+                    </span>
+                </div>
+            )}
             <div id={ResultsDiv} className={styles.results_div + " " + (completed ? styles.correct : "")} />
         </div>
     )
