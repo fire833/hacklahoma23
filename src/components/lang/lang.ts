@@ -12,7 +12,8 @@ export interface ProgramState {
 export interface FuncDef {
     evaluate: Function,
     num_params: number,
-    hover_md_lines?: string[][]
+    hover_md_lines?: string[][],
+    hasSpecialApply?: boolean,
 }
 
 type label = string;
@@ -199,6 +200,7 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
             ["Runs instruction P1 as if the root node is the active node. It does this without changing the currently active node."],
         ],
         num_params: 1,
+        hasSpecialApply: true
     },
     "GOTO": {
         evaluate: (state: ProgramState, label: string) => {
@@ -482,13 +484,7 @@ function parseLine(line: TokenWithValue[]): Instruction {
     return {
         evaluate: (state: ProgramState) => {
             let old_active_node = state.graph_context.active_node_id;
-            if (function_name === "ROOT") {
-                state.graph_context.active_node_id = state.graph_context.root_node_id
-            }
             let result = apply(function_definition, params, state);
-            if (function_name === "ROOT" && state.graph_context.active_node_id === state.graph_context.root_node_id) {
-                state.graph_context.active_node_id = old_active_node;
-            }
             return result;
         },
         label,
@@ -515,10 +511,21 @@ export const compile = (source: string): Program => {
 
 
 export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): ValidScalarType => {
+    let old_active_node = state.graph_context.active_node_id;
+    if (def.hasSpecialApply) {
+        state.graph_context.active_node_id = state.graph_context.root_node_id
+        console.log("Applying root with state and params:", state, params);
+    }
+    
     let applied_params = params.map(p => typeof p === "object" ? apply(p.function_def, p.args, state) : p);
     console.log("Applying function with def", def, "with params", applied_params);
+    
+    let result = def.evaluate(state, ...applied_params);
+    if (def.hasSpecialApply && state.graph_context.active_node_id === state.graph_context.root_node_id) {
+        state.graph_context.active_node_id = old_active_node;
+    }
 
-    return def.evaluate(state, ...applied_params);
+    return result;
 }
 
 
