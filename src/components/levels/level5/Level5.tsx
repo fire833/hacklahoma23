@@ -16,6 +16,10 @@ import { StaticGraph } from "../StaticGraph";
 
 const LEVEL_NUM = 5;
 
+// SOLUTION:
+//
+// 
+
 export function Level5() {
 
     const test_cases: TestCase[] = [
@@ -32,26 +36,64 @@ export function Level5() {
             },
             solution_predicates: [
                 (graph) => {
-                    return ((Object.values(graph.graph).length === 3) && graph.graph["a"].value === 8 && graph.graph["b"].value === 7 && graph.graph["c"].value === 5)
+                    if (!(Object.values(graph.graph).length === 3)) throw "Graph output must contain 3 nodes"
+                    if (!(graph.graph["a"].value === 8 && graph.graph["b"].value === 7 && graph.graph["c"].value === 5)) throw "Graph output must be 875"
+                    return true
+                },
+            ],
+        },
+        {
+            initial_graph_provider: () => {
+                return new GraphContext({
+                    "a": new GraphNode("a", 6, ["b", "d"]),
+                    "b": new GraphNode("b", 6, ["a", "c", "e"]),
+                    "c": new GraphNode("c", 1, ["b", "f"]),
+                    "d": new GraphNode("d", 1, ["a"]),
+                    "e": new GraphNode("e", 6, ["b"]),
+                    "f": new GraphNode("f", 6, ["c"]),
+                }, "a");
+            },
+            solution_predicates: [
+                (graph) => {
+                    if (!(Object.values(graph.graph).length === 3)) throw "Graph output must contain 3 nodes";
+                    if (!(graph.graph["a"].value === 8 && graph.graph["b"].value === 2 && graph.graph["c"].value === 7)) throw "Graph output must be 827";
+                    return true
+                },
+            ],
+        },
+        {
+            initial_graph_provider: () => {
+                return new GraphContext({
+                    "a": new GraphNode("a", 5, ["b", "d"]),
+                    "b": new GraphNode("b", 0, ["a", "c", "e"]),
+                    "c": new GraphNode("c", 1, ["b", "f"]),
+                    "d": new GraphNode("d", 3, ["a"]),
+                    "e": new GraphNode("e", 9, ["b"]),
+                    "f": new GraphNode("f", 9, ["c"]),
+                }, "a");
+            },
+            solution_predicates: [
+                (graph) => {
+                    if (!(Object.values(graph.graph).length === 3)) throw "Graph output must contain 3 nodes";
+                    if (!(graph.graph["a"].value === 9 && graph.graph["b"].value === 9 && graph.graph["c"].value === 9)) throw "Graph output must be 900";
+                    return true
                 },
             ],
         },
     ];
+    
     const [loadedTestCase, setLoadedTestCase] = useState(0);
-
-
     const [correctTestCases, setCorrectTestCases] = useState<number[]>([]);
 
-    
     const context = useContext(AppContext);
 
 
     function completeCase(number: number) {
         let newCorrectCases = [...correctTestCases, number];
         console.log("Calling completeCase");
-        
+
         setCorrectTestCases(newCorrectCases);
-        if(Array.from(new Set(newCorrectCases)).length === test_cases.length) {
+        if (Array.from(new Set(newCorrectCases)).length === test_cases.length) {
             context.setCompletedLevels([...context.completedLevels, LEVEL_NUM - 1]);
             console.log("Finished all cases, updating context!");
         }
@@ -149,7 +191,7 @@ export function Level5() {
             </p>
             <p>
                 Please refer to the test cases in the test-cases tab in order to get a better idea of what your input graphs will look like, and
-                run your code against them to verify functionality. If your graph pane lights up green, then the program ran successfully, and your 
+                run your code against them to verify functionality. If your graph pane lights up green, then the program ran successfully, and your
                 Wookie friend has a new appreciation for decimal addition!
             </p>
         </div>
@@ -165,5 +207,5 @@ export function Level5() {
     }, ReferenceTab
     ];
 
-    return <Level levelIndex={LEVEL_NUM - 1}  completeCase={completeCase} completedTestCased={correctTestCases} tabs={tabs} loadedTestCase={loadedTestCase} setLoadedTestCase={setLoadedTestCase} test_cases={test_cases}></Level>
+    return <Level levelIndex={LEVEL_NUM - 1} completeCase={completeCase} completedTestCased={correctTestCases} tabs={tabs} loadedTestCase={loadedTestCase} setLoadedTestCase={setLoadedTestCase} test_cases={test_cases}></Level>
 }
