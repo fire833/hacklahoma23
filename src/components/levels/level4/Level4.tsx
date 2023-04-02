@@ -99,6 +99,28 @@ export function Level4() {
                 You decide to implement an acsending linked-list counter to count from 0 to N this time for your Wookie friend. The input number will be 
                 included in the root node and should be decremented while adding new ascending nodes until the root node has a value of 0.
             </p>
+            <p>
+                All memory graphs have a <i>root node</i>, which is the active node at the start of the program.
+                The root node can be accessed from anywhere in the memory graph, and is the only node to have this 
+                special property.
+            </p>
+            <p>
+                The <b>ROOT</b> function accepts an entire function call as a single parameter,
+                and that entire function call will be evaluated as if the root node is the active node.
+                This is very useful. Here are some examples:
+            </p>
+            <p>
+                <b>ROOT TRAVERSE 0</b> # Move to the root node's 0th neighbor
+            </p>
+            <p>
+                <b>SET ROOT $VALUE</b> # Set the current node's value to the root's value
+            </p>
+            <p>
+                <b>SET $MATH_ADD ROOT $VALUE $VALUE</b> # Add the root's value to the current node's value
+            </p>
+            <p>
+                <b>ROOT SET $MATH_ADD $VALUE -1</b> # Deincrement the root node's value
+            </p>
             <h4>Goals/Objectives</h4>
             <p>
                 The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to N.

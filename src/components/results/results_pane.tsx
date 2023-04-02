@@ -81,8 +81,8 @@ export default function ResultsPane(props: ResultsProps) {
                 console.log("Setting model markers");
                 
                 monacoConst.editor.setModelMarkers(m, "", [{
-                    startLineNumber: exp.source_line,
-                    endLineNumber: exp.source_line,
+                    startLineNumber: exp.source_line + 1,
+                    endLineNumber: exp.source_line + 1,
                     startColumn: 1,
                     endColumn: 100,
                     message: exp.error,
@@ -112,14 +112,15 @@ export default function ResultsPane(props: ResultsProps) {
             try {
                 instruction.evaluate(state);
             } catch (e: any) {
+                console.error(e);
                 console.log("Threw error", e.toString());
                 
                 let m = props.mountedEditor?.getModel();
                 if(m){  
                     monacoConst.editor.setModelMarkers(m, "", [
                         {
-                            startLineNumber: instruction.source_line,
-                            endLineNumber: instruction.source_line,
+                            startLineNumber: instruction.source_line + 1,
+                            endLineNumber: instruction.source_line + 1,
                             startColumn: 1,
                             endColumn: 100,
                             message: e.toString(),
