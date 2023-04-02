@@ -15,15 +15,15 @@ import { AppContext } from "../../../context/context";
 
 const LEVEL_NUM = 4;
 
-// SOLUTION:
-//
+// Solution:
 // BUBBLE 1
-// SET $MATH_ADD $VALUE -1
 // TRAVERSE 0
-// loop: ROOT SET $MATH_ADD $VALUE -1
-// BUBBLE $MATH_ADD $VALUE 1
+// ROOT SET $MATH_ADD $VALUE -2
+// loop: BUBBLE $MATH_ADD $VALUE 1
+// ROOT SET $MATH_ADD $VALUE -1
 // TRAVERSE 1
-// GOTO_IF_NEQ loop: ROOT $VALUE 0
+// EXIT_IF_EQ ROOT $VALUE 0
+// GOTO loop:
 
 export function Level4() {
 
@@ -34,8 +34,8 @@ export function Level4() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 17)) throw "Graph must have 17 nodes";
-                    if (!(graph.graph[graph.active_node_id].value === 17 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 17) and root node must be 0";
+                    if (!(Object.values(graph.graph).length === 16)) throw "Graph must have 17 nodes";
+                    if (!(graph.graph[graph.active_node_id].value === 15 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 17) and root node must be 0";
                     return true;
                 },
             ],
@@ -46,8 +46,8 @@ export function Level4() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 14)) throw "Graph must have 14 nodes";
-                    if (!(graph.graph[graph.active_node_id].value === 14 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 14) and root node must be 0";
+                    if (!(Object.values(graph.graph).length === 13)) throw "Graph must have 14 nodes";
+                    if (!(graph.graph[graph.active_node_id].value === 12 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 14) and root node must be 0";
                     return true;
                 },
             ],
@@ -58,8 +58,8 @@ export function Level4() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 13)) throw "Graph must have 13 nodes";
-                    if (!(graph.graph[graph.active_node_id].value === 13 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 13) and root node must be 0";
+                    if (!(Object.values(graph.graph).length === 12)) throw "Graph must have 13 nodes";
+                    if (!(graph.graph[graph.active_node_id].value === 11 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 13) and root node must be 0";
                     return true;
                 },
             ],
@@ -125,16 +125,7 @@ export function Level4() {
             <p>
                 The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to N.
                 You can implement this using the <b>BUBBLE</b>, <b>TRAVERSE</b>, <b>GOTO_IF_NEQ</b> instructions like before, but you will need to perform
-                comparisons to the root node with the <b>ROOT</b> instruction as well. You can follow a pattern similar to the following: 
-                You can follow a pattern similar to
-            </p>
-            <b>loop: BUBBLE $MATH_ADD $VALUE 1</b> <br/>
-            <b>TRAVERSE 1</b> <br/>
-            <b>GOTO_IF_NEQ $VALUE 0</b> <br/>
-            <p>
-                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend can help out his Jawa
-                herder friends!
+                comparisons to the root node with the <b>ROOT</b> instruction as well. 
             </p>
         </div>
     }, EditorTab,
