@@ -45,4 +45,7 @@
 
 .homeButton {
     margin-right: 1em;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
 }

@@ -3,13 +3,20 @@ import levelStyles from "./levels.module.css"
 import { useNavigate } from 'react-router-dom'
 import {createNoise2D} from "simplex-noise";
 import { BackgroundCanvas } from "../BackgroundCanvas";
+import bgurl from "../../assets/aurora.jpeg"
 
 
 export function LevelHeader() {
     const navigate = useNavigate();
 
-    return <div className={levelStyles.levelHeader} style={{position: "relative"}}>
-        <div id="header_cvs" style={{
+    return <div className={levelStyles.levelHeader} style={{
+        position: "relative",
+        backgroundImage: `url(${bgurl})`,
+        backgroundPosition: `center`,
+        color: "white",
+        textShadow: "0px 0px 15px white"
+        }}>
+        {/* <div id="header_cvs" style={{
             position: "absolute",
             top: "0",
             left: "0",
@@ -19,8 +26,8 @@ export function LevelHeader() {
             pointerEvents: "none"
         }}>
             <BackgroundCanvas uid={"headercvs"}></BackgroundCanvas>
-        </div>
+        </div> */}
         <b>Escape from A-77</b>
-        <button className={levelStyles.homeButton} onClick={() => { navigate("/"); }}>Return to menu</button>
+        <a className={levelStyles.homeButton} onClick={() => { navigate("/"); }}>&lt; Return to menu</a>
     </div>
 }

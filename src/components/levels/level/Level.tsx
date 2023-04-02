@@ -50,7 +50,7 @@ export function Level(props: LevelProps) {
                 tabs={props.tabs}
                 runningSourceLine={runningSourceLine}
             ></EditorPane>
-            <span style={{width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)"}}></span>
+            <span style={{width: "100%", height: "100%", backgroundColor: "rgba(50, 48, 63, 1)"}}></span>
             <ResultsPane completeTestCase={props.completeCase} completedTestCases={props.completedTestCased} setRunningSourceLine={setRunningSourceLine} mountedEditor={mountedEditor} serializer={GraphContext.serializers[graphSerializer]} test_cases={props.test_cases} loadedTestCase={props.loadedTestCase} />
         </main>
     </div>
