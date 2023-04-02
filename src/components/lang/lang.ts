@@ -197,6 +197,16 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         ],
         num_params: 0,
     },
+    "ROOT": {
+        evaluate: (_: ProgramState) => {
+
+        },
+        num_params: 1,
+        hover_md_lines: [
+            []
+        ]
+        
+    }
 }
 
 export const LANG_DEF: languages.IMonarchLanguage = {
@@ -412,7 +422,15 @@ function parseLine(line: TokenWithValue[]): Instruction {
 
     return {
         evaluate: (state: ProgramState) => {
-            return apply(function_definition, params, state);
+            let old_active_node = state.graph_context.active_node_id;
+            if(function_name === "ROOT") {
+                state.graph_context.active_node_id = state.graph_context.root_node_id
+            }
+            let result = apply(function_definition, params, state);
+            if (function_name === "ROOT" && state.graph_context.active_node_id === state.graph_context.root_node_id) {
+                state.graph_context.active_node_id = old_active_node;
+            }
+            return result;
         },
         label
     }
