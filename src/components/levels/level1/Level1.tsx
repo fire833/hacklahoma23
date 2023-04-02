@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import EditorPane from "../../editor/editor_pane";
 import ResultsPane from "../../results/results_pane";
 import { editor } from "monaco-editor";
@@ -10,6 +10,7 @@ import { LevelHeader } from "../LevelHeader";
 import { Level, Tab } from "../level/Level";
 import { TestCaseLoader } from "../TestCaseLoader";
 import { ReferenceTab } from "../reference/reference";
+import { AppContext } from "../../../context/context";
 
 const LEVEL_NUM = 1;
 const LUNCH_TIME = 1200;
@@ -63,8 +64,18 @@ export function Level1() {
 
     const [correctTestCases, setCorrectTestCases] = useState<number[]>([]);
 
+    const context = useContext(AppContext);
+
     function completeCase(number: number) {
-        setCorrectTestCases([...correctTestCases, number]);
+        let newCorrectCases = [...correctTestCases, number];
+        console.log("Calling completeCase");
+        
+        setCorrectTestCases(newCorrectCases);
+        if(Array.from(new Set(newCorrectCases)).length === test_cases.length) {
+            context.setCompletedLevels([...context.completedLevels, LEVEL_NUM - 1]);
+            console.log("Finished all cases, updating context!");
+            
+        }
     }
 
 
@@ -110,5 +121,5 @@ export function Level1() {
         ReferenceTab
     ];
 
-    return <Level completeCase={completeCase} completedTestCased={correctTestCases} tabs={tabs} loadedTestCase={loadedTestCase} setLoadedTestCase={setLoadedTestCase} test_cases={test_cases}></Level>
+    return <Level levelIndex={LEVEL_NUM - 1} completeCase={completeCase} completedTestCased={correctTestCases} tabs={tabs} loadedTestCase={loadedTestCase} setLoadedTestCase={setLoadedTestCase} test_cases={test_cases}></Level>
 }

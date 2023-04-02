@@ -45,8 +45,6 @@ function App() {
 
   let [completedLevels, setCompletedLevels] = useState<number[]>([]);
 
-
-
   return <>
     <AppContext.Provider value={{
       completedLevels: completedLevels,

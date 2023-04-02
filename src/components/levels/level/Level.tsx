@@ -27,7 +27,8 @@ export interface LevelProps {
     loadedTestCase: number,
     setLoadedTestCase: (num: number) => void,
     completeCase: (num: number) => void,
-    completedTestCased: number[]
+    completedTestCased: number[],
+    levelIndex: number
 }
 export function Level(props: LevelProps) {
     const monacoConst = useMonaco();

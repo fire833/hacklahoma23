@@ -2,12 +2,17 @@ import { BackgroundCanvas } from "../BackgroundCanvas";
 import styles from "./LevelSelect.module.css"
 import { useNavigate } from 'react-router-dom'
 import bgurl from "../../assets/aurora.jpeg";
+import { useContext } from "react";
+import { AppContext } from "../../context/context";
 
 export const NUM_LEVELS = 10;
 
 export function LevelSelect() {
     const navigate = useNavigate();
 
+    let appContext = useContext(AppContext);
+
+    console.log("Rendering buttons with completedLevels", appContext.completedLevels);
     return <div className={styles.levelSelectWrapper} style={{
         backgroundImage: `url(${bgurl})`,
         backgroundSize: "100%",
@@ -22,7 +27,7 @@ export function LevelSelect() {
 
         <div className={styles.buttonGrid}>
             {new Array(NUM_LEVELS).fill(0).map((_, ind) => {
-                return <button key={ind} onClick={() => {
+                return <button className={appContext.completedLevels.indexOf(ind) !== -1 ? styles.complete : ""} key={ind} onClick={() => {
                     navigate(`/level${ind + 1}`);
                 }}>{ind + 1}</button>
             })}
