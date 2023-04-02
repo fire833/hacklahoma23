@@ -12,22 +12,145 @@ import { TestCaseLoader } from "../TestCaseLoader";
 import { ReferenceTab } from "../tabs/reference/reference";
 import { EditorTab } from "../tabs/editor/editor";
 import { AppContext } from "../../../context/context";
+import { StaticGraph } from "../StaticGraph";
 
-const LEVEL_NUM = 6;
+const LEVEL_NUM = 6;    
+
+
+/* Solution:
+BUBBLE 2
+TRAVERSE 0
+rangeloop: BUBBLE $MATH_ADD $VALUE 1
+TRAVERSE 1
+GOTO_IF_EQ rangedone: $VALUE ROOT $VALUE
+GOTO rangeloop:
+rangedone: BUBBLE 0
+TRAVERSE 0
+factorloop: BUBBLE $MATH_MOD ROOT $VALUE $VALUE
+GOTO_IF_EQ donefactor: $NUM_NEIGHBORS 2
+TRAVERSE 0
+GOTO factorloop:
+
+donefactor: SET 1
+DELETE_NEIGHBOR 1
+TRAVERSE 0
+filterloop: GOTO_IF_EQ keep: $GET_NEIGHBOR 2 0
+GOTO remove:
+keep: DELETE_NEIGHBOR 2
+TRAVERSE 1
+GOTO cleanup:
+remove: DELETE_NEIGHBOR 2
+TRAVERSE 1
+CUT_NEIGHBOR 0
+GOTO_IF_NEQ skipreorder: $NUM_NEIGHBORS 3
+REORDER 2 1
+REORDER 0 1
+GOTO cleanup:
+
+cleanup: EXIT_IF_EQ $NUM_NEIGHBORS 1
+GOTO filterloop:
+
+
+skipreorder: DELETE_NEIGHBOR 0
+ 
+*/
 
 export function Level6() {
 
     const test_cases: TestCase[] = [
         {
             initial_graph_provider: () => {
-                return new GraphContext({"a": new GraphNode("a", 0)}, "a");
+                return new GraphContext({
+                    "a": new GraphNode("a", 6, [])
+                }, "a");
             },
             solution_predicates: [
                 (graph) => {
-                    return (graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 3)                    
+                    let one = graph.graph[graph.root_node_id];
+                    if (one.value !== 1) throw "The first factor should be 1";
+
+                    let two = graph.graph[one.neighbors[0]]
+                    if (two.value !== 2) throw "The second factor should be 2";
+
+                    let three = graph.graph[two.neighbors[1]]
+                    if (three.value !== 3) throw "The third factor should be 3";
+
+                    let six = graph.graph[three.neighbors[1]]
+                    if (six.value !== 6) throw "The last factor should be 6";
+
+                    return true;
                 },
             ],
-        },
+        }, {
+            initial_graph_provider: () => {
+                return new GraphContext({
+                    "a": new GraphNode("a", 12, [])
+                }, "a");
+            },
+            solution_predicates: [
+                (graph) => {
+                    let one = graph.graph[graph.root_node_id];
+                    if (one.value !== 1) throw "The first factor should be 1";
+
+                    let two = graph.graph[one.neighbors[0]]
+                    if (two.value !== 2) throw "The second factor should be 2";
+
+                    let three = graph.graph[two.neighbors[1]]
+                    if (three.value !== 3) throw "The third factor should be 3";
+                    
+                    let four = graph.graph[three.neighbors[1]]
+                    if (four.value !== 4) throw "The fourth factor should be 4";
+
+                    let six = graph.graph[four.neighbors[1]]
+                    if (six.value !== 6) throw "The last factor should be 6";
+
+                    return true;
+                },
+            ],
+        }, {
+            initial_graph_provider: () => {
+                return new GraphContext({
+                    "a": new GraphNode("a", 48, [])
+                }, "a");
+            },
+            solution_predicates: [
+                (graph) => {
+                    let last = graph.graph[graph.root_node_id];
+
+                    if(last.value !== 1) throw "The first factor must be 1";
+                    last = graph.graph[last.neighbors[0]];
+
+                    let factors = [];
+                    for(let i = 2; i <= 48; i++){
+                        if(48 % i === 0) factors.push(i);
+                    }
+
+                    for(let f of factors) {
+                        if (last.value !== f) {
+                            throw "Missing or misplaced factor " + f;
+                        }
+                        last = graph.graph[last.neighbors[1]];
+                    }
+
+                    // let one = graph.graph[graph.root_node_id];
+                    // if (one.value !== 1) throw "The first factor should be 1";
+
+                    // let two = graph.graph[one.neighbors[0]]
+                    // if (two.value !== 2) throw "The second factor should be 2";
+
+                    // let three = graph.graph[two.neighbors[1]]
+                    // if (three.value !== 3) throw "The third factor should be 3";
+                    
+                    // let four = graph.graph[three.neighbors[1]]
+                    // if (four.value !== 4) throw "The fourth factor should be 4";
+
+                    // let six = graph.graph[four.neighbors[1]]
+                    // if (six.value !== 6) throw "The last factor should be 6";
+
+                    return true;
+                },
+            ],
+        }
     ];
     const [loadedTestCase, setLoadedTestCase] = useState(0);
 
@@ -54,28 +177,59 @@ export function Level6() {
         tab_kind: "react_node",
         tab_name: "📒 Level 6",
         node: <div style={{ padding: "2%" }}>
-            <h1>Level 6 - Teaching Counting</h1>
-            <p>
-                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
-                to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
-                of the galaxy.
+            <h1>Level 6 - X Factor </h1>
+            <p> 
+                Your wookie friend is becoming increasingly interested in your math lessons,
+                and has checked out a dusty hologram of an arithmetic class on Earth.
+                The wookie made it as far as factoring a number, but had some difficulty.
+                No matter! You know just the thing.
+                You rush to your cell to crank out a program to factor a number.
             </p>
             <p>
-                You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
-                show him how to count with the Arabic numerals.
+                Before you can even leave the lunch table, the wookie grabs your arm.
+                They lean over and whisper a dark secret into your ear - 
+                it's not math they've been so fascinated by, it's escaping!
+                The wookie relays that <i>the warden's master key is merely a list of all the factors of some number! </i>
+                Now you really want to write that program!
+                You tear off to your cell and fire away at the holographic keyboard.
             </p>
-            <h4>Goals/Objectives</h4>
+            <h4>Objective</h4>
             <p>
-                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
-                You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
+                Your program will begin with a single node of value N.
+                You should output a linked list of factors of N.
             </p>
-            <b>BUBBLE N</b>
-            <b>TRAVERSE 0</b>
             <p>
-                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
-                for our counting system!
+                For example, you may receive as input:
             </p>
+            
+            <div style={{marginLeft: "25%"}}>
+                <StaticGraph uid={"p6graph"} width={"50%"} ctx={new GraphContext({}, "")} serializer={() => {
+                    return `
+                    graph {
+                        6 [peripheries=2]
+                    }
+                    `
+                }}></StaticGraph>
+            </div>
+
+            <p>
+                And your output should be:
+            </p>
+            
+            <div style={{marginLeft: "10%"}}>
+                <StaticGraph uid={"p6graph2"} width={"80%"} ctx={new GraphContext({}, "")} serializer={() => {
+                    return `
+                    graph{
+                        subgraph {
+                        rank = same
+                        1 [peripheries=2]
+                        1 -- 2
+                        2 -- 3
+                        3 -- 6
+                    }
+                }`
+                }}></StaticGraph>
+            </div>
         </div>
     }, EditorTab,
     {

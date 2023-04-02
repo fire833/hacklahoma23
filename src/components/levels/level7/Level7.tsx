@@ -20,7 +20,7 @@ export function Level7() {
     const test_cases: TestCase[] = [
         {
             initial_graph_provider: () => {
-                return new GraphContext({"a": new GraphNode("a", 0)}, "a");
+                return new GraphContext({"a": new GraphNode("a", 48)}, "a");
             },
             solution_predicates: [
                 (graph) => {
@@ -52,29 +52,22 @@ export function Level7() {
 
     const tabs: Tab[] = [{
         tab_kind: "react_node",
-        tab_name: "📒 Level 7",
+        tab_name: "🌎 Freedom!",
         node: <div style={{ padding: "2%" }}>
-            <h1>Level 7 - Teaching Counting</h1>
+            <h1>You've Escaped!</h1>
             <p>
-                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
-                to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
-                of the galaxy.
+                48 was the magic number!
             </p>
             <p>
-                You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
-                show him how to count with the Arabic numerals.
-            </p>
-            <h4>Goals/Objectives</h4>
+                Your computer churns out the factors, the wookie scribbles them down frantically,
+                and rushes to the front gate.
+                They tap in each factor carefully, one by one, until the wookie pressed
+                '4' followed by '8' on the keypad.
+                </p>
             <p>
-                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
-                You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
-            </p>
-            <b>BUBBLE N</b>
-            <b>TRAVERSE 0</b>
-            <p>
-                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
-                for our counting system!
+                A low rumble shakes the ground of Prison A-77
+                as the gate reveals the universe ahead of you, 
+                ready to explore with your newest, and most mathematically savvy, wookie friend.
             </p>
         </div>
     }, EditorTab,

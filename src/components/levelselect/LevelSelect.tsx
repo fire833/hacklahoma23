@@ -5,7 +5,7 @@ import bgurl from "../../assets/aurora.jpeg";
 import { useContext } from "react";
 import { AppContext } from "../../context/context";
 
-export const NUM_LEVELS = 10;
+export const NUM_LEVELS = 6;
 
 export function LevelSelect() {
     const navigate = useNavigate();

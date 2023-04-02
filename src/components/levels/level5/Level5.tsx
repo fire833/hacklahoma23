@@ -16,8 +16,29 @@ import { StaticGraph } from "../StaticGraph";
 
 const LEVEL_NUM = 5;
 
-// SOLUTION:
-//
+// REALLY BAD SOLUTION:
+// TRAVERSE 0
+// travloop: GOTO_IF_EQ finishedtrav: $NUM_NEIGHBORS 1
+// TRAVERSE 1
+// GOTO travloop:
+// finishedtrav: TRAVERSE 0
+// SET $MATH_ADD $VALUE $GET_NEIGHBOR $MATH_ADD $NUM_NEIGHBORS -1
+// DELETE_NEIGHBOR $MATH_ADD $NUM_NEIGHBORS -1
+// addloop: TRAVERSE 0
+// SET $MATH_ADD $VALUE $GET_NEIGHBOR $MATH_ADD $NUM_NEIGHBORS -1
+// DELETE_NEIGHBOR $MATH_ADD $NUM_NEIGHBORS -1
+// GOTO_IF_EQ carrytime: $NUM_NEIGHBORS 1
+// GOTO addloop:
+// carrytime: TRAVERSE 0
+// TRAVERSE 1
+// SET_NEIGHBOR 0 $MATH_ADD $GET_NEIGHBOR 0 $MATH_DIV $VALUE 10
+// SET $MATH_MOD $VALUE 10
+// TRAVERSE 0
+// carryloop: SET_NEIGHBOR 0 $MATH_ADD $GET_NEIGHBOR 0 $MATH_DIV $VALUE 10
+// SET $MATH_MOD $VALUE 10
+// EXIT_IF_EQ $NUM_NEIGHBORS 1
+// TRAVERSE 0
+// GOTO carryloop:
 // 
 
 export function Level5() {
@@ -75,7 +96,10 @@ export function Level5() {
             solution_predicates: [
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 3)) throw "Graph output must contain 3 nodes";
-                    if (!(graph.graph["a"].value === 9 && graph.graph["b"].value === 9 && graph.graph["c"].value === 9)) throw "Graph output must be 900";
+                    let root = graph.graph[graph.root_node_id];
+                    let next = graph.graph[root.neighbors[0]];
+                    let nextnext = graph.graph[next.neighbors[1]];
+                    if (!(root.value === 9 && next.value === 0 && nextnext.value === 0)) throw "Graph output must be 900";
                     return true
                 },
             ],
