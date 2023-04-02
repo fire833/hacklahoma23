@@ -32,7 +32,7 @@ export default function DebugBar(props: DebugBarProps) {
     // }
 
     return (
-        <div className={styles.debug} draggable={false}
+        <div className={styles.debug}
             // onDragStart={(e) => { handleDrag(e); e.dataTransfer.setDragImage(document.createElement("div"), xCoord, yCoord); }}
             // onDrag={handleDrag}
             // onDragEnd={handleDrag}
@@ -43,7 +43,7 @@ export default function DebugBar(props: DebugBarProps) {
             <button onClick={props.onStep}>Step</button>
             <input type="range" onChange={(e) => {
                 if (props.setExecutionDelay) {
-                    props.setExecutionDelay(parseInt(e.currentTarget.value));
+                    props.setExecutionDelay((100 - parseInt(e.currentTarget.value)) * 20);
                 }
             }} defaultValue={50}></input>
         </div>

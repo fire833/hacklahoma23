@@ -15,6 +15,24 @@
 }
 
 
+.results_div.correct > svg {
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: background-color 0.5s;
+}
+
+
+.results_div.correct > svg > g > polygon{
+    fill: rgba(0, 255, 0, 0.0);
+    transition: background-color 0.0s!important;
+}
+
+
+
+.results_div.correct > svg > g > path{
+    fill: rgba(0, 255, 0, 0.0);
+    transition: background-color 0.0s!important;
+}
+
 .results_div polygon {
     pointer-events: none;
 }
