@@ -59,6 +59,7 @@ export default function ResultsPane(props: ResultsProps) {
         let program = compile(props.mountedEditor.getValue());
         let state_provider = () => {return {
             instruction_pointer: 0,
+            program: program,
             graph_context: props.test_cases[props.loadedTestCase].initial_graph_provider()
         }};
 

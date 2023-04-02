@@ -5,7 +5,8 @@ export const LANG = "GraphASM";
 
 export interface ProgramState {
     instruction_pointer: number,
-    graph_context: GraphContext
+    graph_context: GraphContext,
+    program: Program
 }
 
 export interface FuncDef {
@@ -206,6 +207,22 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
             []
         ]
 
+    },
+    "GOTO": {
+        evaluate: (state: ProgramState, label: string) => {
+            let lines_with_label = state.program.map((e, ind) => [e, ind]).filter(e => (e[0] as Instruction).label === label);
+            if(lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
+            state.instruction_pointer = (lines_with_label[0][1] as number);
+        },
+        num_params: 1
+    },
+    "EXIT_IF_EQ": {
+        evaluate: (state: ProgramState, a: number, b: number) => {
+            if(a === b) {
+                state.instruction_pointer = Infinity;
+            }
+        },
+        num_params: 2
     }
 }
 
