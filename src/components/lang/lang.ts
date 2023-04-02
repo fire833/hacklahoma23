@@ -158,7 +158,7 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
     },
     "$GET_NEIGHBOR": {
         evaluate: (state: ProgramState, a: number) => {
-            state.graph_context.get_neighbor(a);
+            return state.graph_context.get_neighbor(a);
         },
         hover_md_lines: [
             ["Returns the current value of neighbor with index P1."],
@@ -416,10 +416,11 @@ function evaluate_params(function_name: string, args: TokenWithValue[]): { param
 
     while (unsatisfied_params > 0) {
         let current_param = args[current_param_idx];
-        if(current_param === undefined) {
+        if (current_param === undefined) {
             throw {
                 source_line: args[0].source_line,
-                error: "Not enough parameters to satisfy function " + function_name};
+                error: "Not enough parameters to satisfy function " + function_name
+            };
         }
         if (current_param.type === `constant.${LANG}`) {
             evaluated_params.push(parseInt(current_param.value));
@@ -524,10 +525,10 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
         state.graph_context.active_node_id = state.graph_context.root_node_id
         console.log("Applying root with state and params:", state, params);
     }
-    
+
     let applied_params = params.map(p => typeof p === "object" ? apply(p.function_def, p.args, state) : p);
     console.log("Applying function with def", def, "with params", applied_params);
-    
+
     let result = def.evaluate(state, ...applied_params);
     if (def.hasSpecialApply && state.graph_context.active_node_id === state.graph_context.root_node_id) {
         state.graph_context.active_node_id = old_active_node;
