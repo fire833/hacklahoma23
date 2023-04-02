@@ -13,17 +13,6 @@ export function LevelSelect() {
         backgroundSize: "100%",
         color: "rgba(255, 255, 255, 0.9)"
     }}>
-
-        <div style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: "-1",
-        }}>
-            <BackgroundCanvas x_min={200} x_max={800} chunkiness={5} uid="splashcvs"></BackgroundCanvas>
-        </div>
         <h1 style={{
             fontWeight: 900,
             fontSize: "4em",

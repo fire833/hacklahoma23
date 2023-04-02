@@ -7,7 +7,6 @@ import EditorPane from "../../editor/editor_pane";
 import ResultsPane from "../../results/results_pane";
 import { TestCase, compile } from "../../lang/lang";
 import levelStyles from "../levels.module.css";
-import { BackgroundCanvas } from "../../BackgroundCanvas";
 
 export type Tab_Editor = {
     tab_kind: "editor",
