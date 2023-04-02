@@ -14,7 +14,8 @@
     "d3-transition": "^3.0.1",
     "monaco-editor": "^0.36.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.10.0"
   },
   "devDependencies": {
     "@types/d3-graphviz": "^2.6.7",

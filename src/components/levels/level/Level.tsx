@@ -8,8 +8,6 @@ import ResultsPane from "../../results/results_pane";
 import { TestCase, compile, run } from "../../lang/lang";
 import levelStyles from "../levels.module.css";
 
-
-
 export type Tab_Editor = {
     tab_kind: "editor",
     tab_name: "Editor"
@@ -24,13 +22,10 @@ export type Tab_ReactNode = {
 export type Tab = Tab_Editor | Tab_ReactNode
 
 export interface LevelProps {
-    active_level: number,
     tabs: Tab[],
     test_cases: TestCase[]
 }
-export function Level(props: LevelProps){
-    
-
+export function Level(props: LevelProps) {
     const monacoConst = useMonaco();
 
     const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
@@ -39,8 +34,6 @@ export function Level(props: LevelProps){
     const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
 
     const [loadedTestCase, setLoadedTestCase] = useState(0);
-
-    if (props.active_level !== 1) return <></>;
 
     return <div className={levelStyles.levelWrapper}>
         <LevelHeader></LevelHeader>
@@ -51,7 +44,7 @@ export function Level(props: LevelProps){
                 onChange={(e) => { }}
                 tabs={props.tabs}
             ></EditorPane>
-            <span style={{width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)"}}></span>
+            <span style={{ width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)" }}></span>
             <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
                 if (!mountedEditor) throw "OnCompile called with no editor";
                 if (!monacoConst) throw "OnCompile called without monaco";
