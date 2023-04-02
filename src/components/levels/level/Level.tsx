@@ -11,7 +11,7 @@ import { BackgroundCanvas } from "../../BackgroundCanvas";
 
 export type Tab_Editor = {
     tab_kind: "editor",
-    tab_name: "Editor"
+    tab_name: string
 }
 
 export type Tab_ReactNode = {
@@ -49,8 +49,8 @@ export function Level(props: LevelProps) {
                 onChange={(e) => { }}
                 tabs={props.tabs}
                 runningSourceLine={runningSourceLine}
-            ></EditorPane>
-            <span style={{width: "100%", height: "100%", backgroundColor: "rgba(50, 48, 63, 1)"}}></span>
+                ></EditorPane>
+            <span style={{width: "100%", height: "100%", backgroundColor: "rgb(18, 7, 118)"}}></span>
             <ResultsPane completeTestCase={props.completeCase} completedTestCases={props.completedTestCased} setRunningSourceLine={setRunningSourceLine} mountedEditor={mountedEditor} serializer={GraphContext.serializers[graphSerializer]} test_cases={props.test_cases} loadedTestCase={props.loadedTestCase} />
         </main>
     </div>

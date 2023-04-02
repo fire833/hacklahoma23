@@ -64,7 +64,7 @@ export default function EditorPane(props: EditorPaneProps) {
                 return <TabButton index={ind} tab_info={e} isActive={activeTab === ind} activate={() => setActiveTab(ind)}></TabButton>
             })}
         </div>
-        <div style={{flexGrow: 1, overflowY: "scroll"}}>
+        <div style={{flexGrow: 1}}>
             <Editor
                 options={{
                     minimap: {

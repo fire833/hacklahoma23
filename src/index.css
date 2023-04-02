@@ -26,17 +26,17 @@ html {
 
 button {
   font-family: 'Source Code Pro', monospace;
-  font-size: small;
+  /* font-size: small;
   background-color: rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   border-radius: 3px;
   border-width: 3px;
-  border-color: black;
+  border-color: black; */
 }
 
 button:hover {
   /* color: beige; */
-  background-color: rgba(10, 10, 10, 0.2);
-  cursor: pointer;
+  /* background-color: rgba(10, 10, 10, 0.2);
+  cursor: pointer; */
   /* border-color: rgba(5, 5, 5, 0.2); */
 }

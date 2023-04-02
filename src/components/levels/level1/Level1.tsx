@@ -66,7 +66,7 @@ export function Level1() {
 
     const tabs: Tab[] = [{
         tab_kind: "react_node",
-        tab_name: "Level 1",
+        tab_name: "📒 Level 1",
         node: <div style={{ padding: "2%" }}>
             <h1>Level 1 - Lunchtime</h1>
             <p>
@@ -92,17 +92,21 @@ export function Level1() {
         </div>
     }, {
         tab_kind: "editor",
-        tab_name: "Editor"
+        tab_name: "📝 Editor"
     },
     {
         tab_kind: "react_node",
-        tab_name: "Test Cases",
-        node: <div style={{ padding: "1em" }}>
-            {test_cases.map((e, ind) => <div>
-                <TestCaseLoader activate={() => setLoadedTestCase(ind)} index={ind} testCase={e} isActive={loadedTestCase === ind} isComplete={correctTestCases.indexOf(ind) !== -1}></TestCaseLoader>
-            </div>)}
-        </div>
-    }, ReferenceTab
+        tab_name: "🧪 Test Cases",
+        node: <div style={{height: "200vh"}}>
+
+        </div> 
+        // <div style={{ paddingLeft: "1em" }}>
+        //     {test_cases.map((e, ind) => <div>
+        //         <TestCaseLoader activate={() => setLoadedTestCase(ind)} index={ind} testCase={e} isActive={loadedTestCase === ind} isComplete={correctTestCases.indexOf(ind) !== -1}></TestCaseLoader>
+        //     </div>)}
+        // </div>
+    },
+        ReferenceTab
     ];
 
     return <Level completeCase={completeCase} completedTestCased={correctTestCases} tabs={tabs} loadedTestCase={loadedTestCase} setLoadedTestCase={setLoadedTestCase} test_cases={test_cases}></Level>

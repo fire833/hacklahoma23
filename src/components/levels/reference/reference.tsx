@@ -1,7 +1,7 @@
 import { Tab_ReactNode } from "../level/Level";
 
 export const ReferenceTab: Tab_ReactNode = {
-	tab_name: "Reference",
+	tab_name: "🔎 Reference",
 	tab_kind: "react_node",
 	node: (
 		<div style={{ padding: "2%" }}>
