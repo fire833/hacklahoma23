@@ -22,9 +22,7 @@ export function Level2() {
             }, "a"),
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
-                    let only_node = graph.graph[Object.keys(graph.graph)[0]];
-                    return only_node.value === LUNCH_TIME;
+                    return false
                 }
             ]
         },
@@ -34,9 +32,7 @@ export function Level2() {
             }, "b"),
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
-                    let only_node = graph.graph[Object.keys(graph.graph)[0]];
-                    return only_node.value === LUNCH_TIME;
+                    return false
                 }
             ]
         },
@@ -46,9 +42,7 @@ export function Level2() {
             }, "b"),
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
-                    let only_node = graph.graph[Object.keys(graph.graph)[0]];
-                    return only_node.value === LUNCH_TIME;
+                    return false
                 }
             ]
         }
