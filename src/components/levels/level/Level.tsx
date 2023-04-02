@@ -5,7 +5,7 @@ import { GraphContext, GraphNode, SerializerKey } from "../../lang/graph";
 import { LevelHeader } from "../LevelHeader";
 import EditorPane from "../../editor/editor_pane";
 import ResultsPane from "../../results/results_pane";
-import { TestCase, compile, run } from "../../lang/lang";
+import { TestCase, compile } from "../../lang/lang";
 import levelStyles from "../levels.module.css";
 
 
@@ -35,10 +35,11 @@ export function Level(props: LevelProps){
 
     const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
 
-    const [displayedGraph, setDisplayedGraph] = useState<GraphContext | null>(props.test_cases[0].initial_graph_provider());
     const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
 
     const [loadedTestCase, setLoadedTestCase] = useState(0);
+
+    const [runningSourceLine, setRunningSourceLine] = useState<number | null>(null);
 
     if (props.active_level !== 1) return <></>;
 
@@ -48,21 +49,13 @@ export function Level(props: LevelProps){
         <main className={levelStyles.levelPanes}>
             <EditorPane
                 onMount={(e) => setEditor(e)}
+                mountedEditor={mountedEditor}
                 onChange={(e) => { }}
                 tabs={props.tabs}
+                runningSourceLine={runningSourceLine}
             ></EditorPane>
             <span style={{width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)"}}></span>
-            <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
-                if (!mountedEditor) throw "OnCompile called with no editor";
-                if (!monacoConst) throw "OnCompile called without monaco";
-                let program = compile(mountedEditor.getValue());
-
-                run(program, () => {return {
-                    instruction_pointer: 0,
-                    graph_context: props.test_cases[loadedTestCase].initial_graph_provider()
-                }}, (g) => setDisplayedGraph(g));
-
-            }} />
+            <ResultsPane setRunningSourceLine={setRunningSourceLine} mountedEditor={mountedEditor} serializer={GraphContext.serializers[graphSerializer]} test_cases={props.test_cases} loadedTestCase={loadedTestCase} />
         </main>
     </div>
 }

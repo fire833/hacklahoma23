@@ -3,8 +3,9 @@ import Editor, { OnChange, OnMount } from "@monaco-editor/react";
 import styles from "./editor.module.css";
 import levelStyles from "../levels/levels.module.css"
 import { LANG } from "../lang/lang";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Tab, Tab_ReactNode } from "../levels/level/Level";
+import { editor, languages } from "monaco-editor";
 
 
 
@@ -21,13 +22,41 @@ function TabButton(props: TabButtonProps) {
 
 interface EditorPaneProps {
     onMount: OnMount,
+    mountedEditor: editor.IStandaloneCodeEditor | null,
     onChange: OnChange,
-    tabs: Tab[]
+    tabs: Tab[],
+    runningSourceLine: number | null
 }
 
 export default function EditorPane(props: EditorPaneProps) {
 
     let [activeTab, setActiveTab] = useState(0);
+
+    let lastDecorations = useRef<string[]>([]);
+    useEffect(() => {
+        
+        if(props.mountedEditor){
+            if(props.runningSourceLine !== null) {
+                console.log("Bolding running sourceline " + props.runningSourceLine);
+                lastDecorations.current = props.mountedEditor.deltaDecorations(lastDecorations.current, [
+                    {
+                        range: {
+                            startLineNumber: props.runningSourceLine + 1,
+                            endLineNumber: props.runningSourceLine + 1,
+                            startColumn: 1,
+                            endColumn: 1
+                        },
+                        options: {
+                            isWholeLine: true,
+                            inlineClassName: styles.activeLine,
+                            marginClassName: styles.activeMargin,
+                            className: styles.activeClass
+                        }
+                    }
+                ])
+            }
+        }
+    }, [props.mountedEditor, props.runningSourceLine]);
 
     return (<div className={styles.editorWrapper}>
         <div className={levelStyles.tabRow}>

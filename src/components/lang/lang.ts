@@ -338,6 +338,7 @@ export function augmentLineTokensWithValue(line: Token[], sourceLine: string, so
 
 export interface Instruction {
     label?: string,
+    source_line: number,
     evaluate: (state: ProgramState) => void
 }
 
@@ -414,6 +415,8 @@ function parseLine(line: TokenWithValue[]): Instruction {
     let function_name = line[current_token_idx].value;
     let function_definition = FunctionDefinitions[function_name];
 
+    let source_line = line[current_token_idx].source_line;
+
     current_token_idx++;
 
     let { params, tokens_consumed } = evaluate_params(function_name, line.slice(current_token_idx))
@@ -432,11 +435,12 @@ function parseLine(line: TokenWithValue[]): Instruction {
             }
             return result;
         },
-        label
+        label,
+        source_line: source_line
     }
 }
 
-type Program = Instruction[];
+export type Program = Instruction[];
 
 export const compile = (source: string): Program => {
     let source_lines = source.split("\n");
@@ -461,24 +465,6 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
     return def.evaluate(state, ...applied_params);
 }
 
-export const run = (program: Program, initial_state_provider: () => ProgramState, set_graph: (ctx: GraphContext) => void) => {
-
-    console.log("Running program: ", program);
-
-    
-    let state = initial_state_provider();
-
-    while (state.instruction_pointer < program.length) {
-        let instruction = program[state.instruction_pointer];
-        state.instruction_pointer++;
-        instruction.evaluate(state);
-        console.log("State after eval is:", state);
-
-        console.log("Now calling setgraph with", state.graph_context);
-        
-        set_graph(state.graph_context);
-    }
-}
 
 languages.register({
     id: LANG
