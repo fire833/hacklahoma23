@@ -40,7 +40,7 @@ export function Level(props: LevelProps) {
     const [runningSourceLine, setRunningSourceLine] = useState<number | null>(null);
 
     return <div className={levelStyles.levelWrapper}>
-        <LevelHeader></LevelHeader>
+        <LevelHeader levelIdx={props.levelIndex}></LevelHeader>
         <span></span>
         <main className={levelStyles.levelPanes}>
             <EditorPane
