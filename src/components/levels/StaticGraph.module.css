@@ -1,0 +1,23 @@
+
+.wrapper_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper_div > svg {
+    display: block;
+    height: 90%;
+    width: 100%;
+    border: 2px solid black;
+    justify-self: center;
+}
+
+
+.wrapper_div polygon {
+    pointer-events: none;
+}
+
+.wrapper_div ellipse {
+    pointer-events: all;
+}

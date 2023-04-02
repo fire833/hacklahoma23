@@ -23,7 +23,11 @@ export type Tab = Tab_Editor | Tab_ReactNode
 
 export interface LevelProps {
     tabs: Tab[],
-    test_cases: TestCase[]
+    test_cases: TestCase[],
+    loadedTestCase: number,
+    setLoadedTestCase: (num: number) => void,
+    completeCase: (num: number) => void,
+    completedTestCased: number[]
 }
 export function Level(props: LevelProps) {
     const monacoConst = useMonaco();
@@ -31,8 +35,6 @@ export function Level(props: LevelProps) {
     const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
 
     const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
-
-    const [loadedTestCase, setLoadedTestCase] = useState(0);
 
     const [runningSourceLine, setRunningSourceLine] = useState<number | null>(null);
 
@@ -48,7 +50,7 @@ export function Level(props: LevelProps) {
                 runningSourceLine={runningSourceLine}
             ></EditorPane>
             <span style={{width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)"}}></span>
-            <ResultsPane setRunningSourceLine={setRunningSourceLine} mountedEditor={mountedEditor} serializer={GraphContext.serializers[graphSerializer]} test_cases={props.test_cases} loadedTestCase={loadedTestCase} />
+            <ResultsPane completeTestCase={props.completeCase} completedTestCases={props.completedTestCased} setRunningSourceLine={setRunningSourceLine} mountedEditor={mountedEditor} serializer={GraphContext.serializers[graphSerializer]} test_cases={props.test_cases} loadedTestCase={props.loadedTestCase} />
         </main>
     </div>
 }

@@ -77,15 +77,10 @@ export class GraphContext {
 
 			// First, register all nodes
 			let node_strings = Object.values(ctx.graph).map(node => {
-				if (node.id === ctx.active_node_id) {
-					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=red shape=circle]`;
-				}
 
-				if (node.id === ctx.root_node_id) {
-					return `${node.id} [label="${node.value}" id="graphnode_${node.id}" color=orange shape=circle]`;
-				}
+				let peripheries = node.id === ctx.root_node_id ? "peripheries=2" : ""
 
-				return `${node.id} [label="${node.value}" id="graphnode_${node.id}" shape=circle]`;
+				return `${node.id} [label="${node.value}" id="graphnode_${node.id}" shape=circle ${peripheries}]`;
 			})
 
 			ctx.bfs((node, visited, queued) => {

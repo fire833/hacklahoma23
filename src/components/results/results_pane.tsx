@@ -14,6 +14,7 @@ export const ResultsDiv = "results-div";
 export interface ResultsProps {
     mountedEditor: editor.IStandaloneCodeEditor | null,
     test_cases: TestCase[],
+    completedTestCases: number[],
     loadedTestCase: number,
     setRunningSourceLine: (line: number) => void,
     serializer: (ctx: GraphContext, hovered_node_id: string | null) => string,
@@ -22,6 +23,7 @@ export interface ResultsProps {
     onPause?: () => void,
     setExecutionDelay?: (delay: number) => void,
     onStep?: () => void,
+    completeTestCase: (num: number) => void
 }
 
 
@@ -46,12 +48,23 @@ export default function ResultsPane(props: ResultsProps) {
     }
 
     const [hoveredNodeId, setHoveredNodeId] = useState<GraphNodeID | null>(null);
-    const [displayedGraph, setDisplayedGraph] = useState<[GraphContext] | null>([props.test_cases[0].initial_graph_provider()]);
+    const [displayedGraph, setDisplayedGraph] = useState<[GraphContext] | null>([props.test_cases[props.loadedTestCase].initial_graph_provider()]);
     const [instructionDelay, setInstructionDelay] = useState(500);
     const [runHooks, setRunHooks] = useState<null | RunHooks>(null);
     const [completed, setCompleted] = useState(false);
     const [isProgramActive, setIsProgramActive] = useState(false);
     const [playPauseButtonState, setPlayPauseButtonState] = useState<"setPlaying" | "setPausing">("setPausing");
+
+    useEffect(() => {
+        if(!isProgramActive || playPauseButtonState === "setPlaying") {
+            let ctx = props.test_cases[props.loadedTestCase].initial_graph_provider();
+            setDisplayedGraph([ctx]);
+        }
+
+        if(props.completedTestCases.indexOf(props.loadedTestCase) === -1){
+            setCompleted(false);
+        }
+    }, [props.loadedTestCase])
 
     const init_run = () => {
         if (!props.mountedEditor) throw "OnCompile called with no editor";
@@ -88,6 +101,7 @@ export default function ResultsPane(props: ResultsProps) {
                 let predicate_evals = props.test_cases[props.loadedTestCase].solution_predicates.map(e => e(state.graph_context));
                 if (predicate_evals.every(e => e)) {
                     setCompleted(true);
+                    props.completeTestCase(props.loadedTestCase);
                 }
                 setIsProgramActive(false);
             }
@@ -131,14 +145,14 @@ export default function ResultsPane(props: ResultsProps) {
             
             let gz = graphviz
                 .graphviz("#" + ResultsDiv)
-                .zoomScaleExtent([0, 0.5])
+                .zoomScaleExtent([0, 0.75])
                 .dot(code)
                 .onerror(e => console.error(e))
                 .transition(() => transition.transition("graphtransition").duration(instructionDelay) as any)
                 .render()
 
         }
-    }, [displayedGraph, props.serializer, hoveredNodeId]);
+    }, [displayedGraph, props.serializer, hoveredNodeId, props.loadedTestCase]);
 
     useEffect(() => {    
         document.getElementById(ResultsDiv)?.addEventListener('mouseover', e => {

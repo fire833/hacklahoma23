@@ -192,8 +192,8 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         num_params: 0,
     },
     "ROOT": {
-        evaluate: (_: ProgramState) => {
-
+        evaluate: (_: ProgramState, param: any) => {
+            return param;
         },
         hover_md_lines: [
             ["Runs instruction P1 as if the root node is the active node. It does this without changing the currently active node."],
