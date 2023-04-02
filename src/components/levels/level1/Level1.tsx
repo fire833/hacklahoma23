@@ -9,7 +9,8 @@ import levelStyles from "../levels.module.css";
 import { LevelHeader } from "../LevelHeader";
 import { Level, Tab } from "../level/Level";
 import { TestCaseLoader } from "../TestCaseLoader";
-import { ReferenceTab } from "../reference/reference";
+import { ReferenceTab } from "../tabs/reference/reference";
+import { EditorTab } from "../tabs/editor/editor";
 import { AppContext } from "../../../context/context";
 
 const LEVEL_NUM = 1;
@@ -105,10 +106,7 @@ export function Level1() {
                 set to zero and your door opened!
             </p>
         </div>
-    }, {
-        tab_kind: "editor",
-        tab_name: "📝 Editor"
-    },
+    }, EditorTab,
     {
         tab_kind: "react_node",
         tab_name: "🧪 Test Cases",
