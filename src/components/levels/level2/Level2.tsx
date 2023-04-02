@@ -34,7 +34,8 @@ export function Level2() {
             solution_predicates: [
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 3)) throw "Graph must have 3 total nodes.";
-                    return (graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 2)                    
+                    if (!(graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 2)) throw "Graph root node must be zero and active node should be 2";
+                    return true;
                 },
             ],
         },

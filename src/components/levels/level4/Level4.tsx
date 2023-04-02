@@ -15,6 +15,16 @@ import { AppContext } from "../../../context/context";
 
 const LEVEL_NUM = 4;
 
+// SOLUTION:
+//
+// BUBBLE 1
+// SET $MATH_ADD $VALUE -1
+// TRAVERSE 0
+// loop: ROOT SET $MATH_ADD $VALUE -1
+// BUBBLE $MATH_ADD $VALUE 1
+// TRAVERSE 1
+// GOTO_IF_NEQ loop: ROOT $VALUE 0
+
 export function Level4() {
 
     const test_cases: TestCase[] = [
@@ -24,8 +34,9 @@ export function Level4() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 16)) throw "Graph must have 16 nodes";
-                    return (graph.graph[graph.active_node_id].value === 16 && graph.graph[graph.root_node_id].value === 0)
+                    if (!(Object.values(graph.graph).length === 17)) throw "Graph must have 17 nodes";
+                    if (!(graph.graph[graph.active_node_id].value === 17 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 17) and root node must be 0";
+                    return true;
                 },
             ],
         },
@@ -35,8 +46,9 @@ export function Level4() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 13)) throw "Graph must have 13 nodes";
-                    return (graph.graph[graph.active_node_id].value === 13 && graph.graph[graph.root_node_id].value === 0)
+                    if (!(Object.values(graph.graph).length === 14)) throw "Graph must have 14 nodes";
+                    if (!(graph.graph[graph.active_node_id].value === 14 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 14) and root node must be 0";
+                    return true;
                 },
             ],
         },
@@ -46,8 +58,9 @@ export function Level4() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 12)) throw "Graph must have 12 nodes";
-                    return (graph.graph[graph.active_node_id].value === 12 && graph.graph[graph.root_node_id].value === 0)
+                    if (!(Object.values(graph.graph).length === 13)) throw "Graph must have 13 nodes";
+                    if (!(graph.graph[graph.active_node_id].value === 13 && graph.graph[graph.root_node_id].value === 0)) throw "Graph active node must be at the end of list (value 13) and root node must be 0";
+                    return true;
                 },
             ],
         },
@@ -72,7 +85,6 @@ export function Level4() {
         }
     }
 
-
     const tabs: Tab[] = [{
         tab_kind: "react_node",
         tab_name: "📒 Level 4",
@@ -84,7 +96,8 @@ export function Level4() {
                 He asks you if you can implement an ascending linked-list counter instead.
             </p>
             <p>
-                You decide to implement an acsending linked-list counter to count from 0 to N this time for your Wookie friend. 
+                You decide to implement an acsending linked-list counter to count from 0 to N this time for your Wookie friend. The input number will be 
+                included in the root node and should be decremented while adding new ascending nodes until the root node has a value of 0.
             </p>
             <h4>Goals/Objectives</h4>
             <p>

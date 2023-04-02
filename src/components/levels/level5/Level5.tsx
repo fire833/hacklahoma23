@@ -20,11 +20,18 @@ export function Level5() {
     const test_cases: TestCase[] = [
         {
             initial_graph_provider: () => {
-                return new GraphContext({"a": new GraphNode("a", 0)}, "a");
+                return new GraphContext({
+                    "a": new GraphNode("a", 6, ["b", "d"]),
+                    "b": new GraphNode("b", 5, ["a", "c", "e"]),
+                    "c": new GraphNode("c", 1, ["b", "f"]),
+                    "d": new GraphNode("d", 2, ["a"]),
+                    "e": new GraphNode("e", 2, ["b"]),
+                    "f": new GraphNode("f", 4, ["c"]),
+                }, "a");
             },
             solution_predicates: [
                 (graph) => {
-                    return (graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 3)                    
+                    return ((Object.values(graph.graph).length === 3) && graph.graph["a"].value === 8 && graph.graph["b"].value === 7 && graph.graph["c"].value === 5)
                 },
             ],
         },
@@ -56,9 +63,9 @@ export function Level5() {
         node: <div style={{ padding: "2%" }}>
             <h1>Level 5 - Teaching Addition</h1>
             <p>
-                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
-                to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
-                of the galaxy.
+                Now that your Wookie friend has mastered counting, he now comes back to you wanting to learn how arithemtic addition works.
+                He's curious about getting the sum of multiple sets of skulls of dead Trandoshan lizards (a Wookie's worst enemy) he happens
+                to collect on his home planet.
             </p>
             <p>
                 You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
@@ -66,15 +73,17 @@ export function Level5() {
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
-                You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
+                The goal for this challenge is to sum the values of two linked lists (your graph input), with each node value being the 100s, 
+                10s, and 1s place for the input numbers, and output a single linked-list where the combined values equal to the sum.
+
+                For example, if your input linked lists are (1, 2, 3) and (4, 5, 6), that would be equivalent to summing 123 + 456 = 579, and 
+                the equivalent output linked-list should be (5, 7, 9). You should be able to handle carries for sums of digits which are greater than
+                or equal to 10. Input and output numbers will always be 3 digits in length. Keep this in mind when writing your algorithm.
             </p>
-            <b>BUBBLE N</b>
-            <b>TRAVERSE 0</b>
             <p>
-                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
-                for our counting system!
+                Please refer to the test cases in the test-cases tab in order to get a better idea of what your input graphs will look like, and
+                run your code against them to verify functionality. If your graph pane lights up green, then the program ran successfully, and your 
+                Wookie friend has a new appreciation for decimal addition!
             </p>
         </div>
     }, EditorTab,
