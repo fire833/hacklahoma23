@@ -39,7 +39,7 @@ export function Level2() {
 
     const tabs: Tab[] = [{
         tab_kind: "react_node",
-        tab_name: "Level 1",
+        tab_name: "Level 2",
         node: <div style={{ padding: "2%" }}>
             <h1>Level 2 - Teaching Counting</h1>
             <p>
