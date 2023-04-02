@@ -11,18 +11,9 @@ import { Level, Tab } from "../level/Level";
 import { TestCaseLoader } from "../TestCaseLoader";
 import { ReferenceTab } from "../reference/reference";
 
-const LEVEL_NUM = 2;
+const LEVEL_NUM = 7;
 
-// SOLUTION:
-//
-// BUBBLE 1
-// TRAVERSE 0
-// BUBBLE 2
-// TRAVERSE 1
-// BUBBLE 3
-// TRAVERSE 1
-
-export function Level2() {
+export function Level7() {
 
     const test_cases: TestCase[] = [
         {
@@ -31,7 +22,6 @@ export function Level2() {
             },
             solution_predicates: [
                 (graph) => {
-                    if (!(Object.values(graph.graph).length === 3)) throw "Graph must have 3 total nodes.";
                     return (graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 3)                    
                 },
             ],
@@ -49,9 +39,9 @@ export function Level2() {
 
     const tabs: Tab[] = [{
         tab_kind: "react_node",
-        tab_name: "Level 2",
+        tab_name: "Level 7",
         node: <div style={{ padding: "2%" }}>
-            <h1>Level 2 - Teaching Counting</h1>
+            <h1>Level 7 - Teaching Counting</h1>
             <p>
                 As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
                 to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
@@ -66,8 +56,8 @@ export function Level2() {
                 The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
                 You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
             </p>
-            <b>BUBBLE N</b> <br/>
-            <b>TRAVERSE 0</b> <br/>
+            <b>BUBBLE N</b>
+            <b>TRAVERSE 0</b>
             <p>
                 Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
                 try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
