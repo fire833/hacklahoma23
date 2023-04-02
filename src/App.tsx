@@ -11,7 +11,7 @@ import { LANG_COMPLETIONS, LANG_DEF, LANG_HOVER, LANG as LANG_NAME, compile } fr
 import { GraphContext, GraphNode, GraphNodeID, SerializerKey } from './components/lang/graph'
 import { LevelSelect } from './components/levelselect/LevelSelect'
 import { Level1 } from './components/levels/level1/Level1'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom'
 import { Level2 } from './components/levels/level2/Level2'
 import { Level3 } from './components/levels/level3/Level3'
 import { Level4 } from './components/levels/level4/Level4'
@@ -51,7 +51,7 @@ function App() {
       setCompletedLevels: setCompletedLevels
     }}>
       <div className={styles.appWrapper}>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path='/' element={<LevelSelect />} />
             <Route path='/level1' element={<Level1 />} />
@@ -60,12 +60,12 @@ function App() {
             <Route path='/level4' element={<Level4 />} />
             <Route path='/level5' element={<Level5 />} />
             <Route path='/level6' element={<Level6 />} />
-            <Route path='/level7' element={<Level7 />} />
+            {/* <Route path='/level7' element={<Level7 />} />
             <Route path='/level8' element={<Level8 />} />
             <Route path='/level9' element={<Level9 />} />
-            <Route path='/level10' element={<Level10 />} />
+            <Route path='/level10' element={<Level10 />} /> */}
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </div>
     </AppContext.Provider>
     </>
