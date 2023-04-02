@@ -38,11 +38,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     padding-left: 1em;
-    background-color: rgba(0, 0, 255, 0.2);
+    /* background-color: rgba(0, 0, 255, 0.2); */
 }
 
 .homeButton {
-    /* Aaron please forgive me */
-    margin-left: 83vw;
+    margin-right: 1em;
 }
