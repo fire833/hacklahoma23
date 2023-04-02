@@ -406,7 +406,6 @@ function parseLine(line: TokenWithValue[]): Instruction {
 
     current_token_idx++;
 
-
     let { params, tokens_consumed } = evaluate_params(function_name, line.slice(current_token_idx))
     console.log(`Resolved params:`, params);
 
@@ -476,5 +475,5 @@ function get_token_at_offset(source_line_parsed: TokenWithValue[], column: numbe
 
 
 export interface TestCase {
-    
+
 }

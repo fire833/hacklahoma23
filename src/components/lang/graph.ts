@@ -254,11 +254,21 @@ export class GraphContext {
 		ctx[dying_neighbor].neighbors.forEach((v, i, a) => {
 			ctx[v].remove_neighbor(dying_neighbor);
 			ctx[dying_neighbor].neighbors.forEach((v2, i2, a2) => {
-				if (ctx[v2].has_neighbor(dying_neighbor)) {
+				if (v === v2) {
+					return;
+				}
 
+				if (!ctx[v2].has_neighbor(v)) {
+					ctx[v2].add_neighbor(v);
+				}
+
+				if (!ctx[v].has_neighbor(v2)) {
+					ctx[v].add_neighbor(v2);
 				}
 			});
 
 		});
+
+		delete this.graph[dying_neighbor];
 	}
 }
