@@ -444,17 +444,21 @@ export const apply = (def: FuncDef, params: ParamType[], state: ProgramState): V
     return def.evaluate(state, ...applied_params);
 }
 
-export const run = (program: Program, initial_state: ProgramState, set_graph: (ctx: GraphContext) => void) => {
+export const run = (program: Program, initial_state_provider: () => ProgramState, set_graph: (ctx: GraphContext) => void) => {
 
     console.log("Running program: ", program);
 
-    let state = { ...initial_state };
+    
+    let state = initial_state_provider();
 
     while (state.instruction_pointer < program.length) {
         let instruction = program[state.instruction_pointer];
         state.instruction_pointer++;
         instruction.evaluate(state);
         console.log("State after eval is:", state);
+
+        console.log("Now calling setgraph with", state.graph_context);
+        
         set_graph(state.graph_context);
     }
 }
@@ -476,5 +480,6 @@ function get_token_at_offset(source_line_parsed: TokenWithValue[], column: numbe
 
 
 export interface TestCase {
-    
+    initial_graph_provider: () => GraphContext,
+    solution_predicates: [(graph: GraphContext) => boolean]
 }

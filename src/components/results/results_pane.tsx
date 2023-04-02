@@ -24,21 +24,23 @@ export default function ResultsPane(props: ResultsProps) {
     const [hoveredNodeId, setHoveredNodeId] = useState<GraphNodeID | null>(null);
 
     useEffect(() => {
-        console.log("In useeffect");
+        console.log("In useeffect - rerendering");
         
         if(props.graph){    
-            console.log("Updating graph with", props.graph);[]
+            console.log("Updating graph with", props.graph);
             let code = props.serializer(props.graph, hoveredNodeId);
             console.log("Rendering code", code);
             
-            graphviz
+            let gz = graphviz
                 .graphviz("#" + ResultsDiv)
+                .zoomScaleExtent([0, 0.5])
                 .dot(code)
                 .onerror(e => console.error(e))
-                .transition(() => transition.transition().duration(250) as any)
-                .render();
+                .transition(() => transition.transition("graphtransition").duration(250) as any)
+                .render()
+
         }
-    });
+    }, [props.graph, props.serializer, hoveredNodeId]);
 
     useEffect(() => {
         console.log("Setting hover listener");
@@ -53,9 +55,7 @@ export default function ResultsPane(props: ResultsProps) {
                 if(parent.id.startsWith("graphnode_")) {
                     let hoveredid = parent.id.replace("graphnode_", "");
                     setHoveredNodeId(hoveredid);
-                    console.log("Hovering nodeid", hoveredid);
-                    
-                } else {
+                    console.log("Hovering nodeid", hoveredid);   
                 }
             }
 

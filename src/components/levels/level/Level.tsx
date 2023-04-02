@@ -35,8 +35,10 @@ export function Level(props: LevelProps){
 
     const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
 
-    const [displayedGraph, setDisplayedGraph] = useState<GraphContext | null>(null);
+    const [displayedGraph, setDisplayedGraph] = useState<GraphContext | null>(props.test_cases[0].initial_graph_provider());
     const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
+
+    const [loadedTestCase, setLoadedTestCase] = useState(0);
 
     if (props.active_level !== 1) return <></>;
 
@@ -55,14 +57,10 @@ export function Level(props: LevelProps){
                 if (!monacoConst) throw "OnCompile called without monaco";
                 let program = compile(mountedEditor.getValue());
 
-                run(program, {
+                run(program, () => {return {
                     instruction_pointer: 0,
-                    graph_context: new GraphContext({
-                        "a": new GraphNode("a", 0, ["b", "c"]),
-                        "b": new GraphNode("b", 1, ["a"]),
-                        "c": new GraphNode("c", 5, ["a"])
-                    }, "a")
-                }, setDisplayedGraph);
+                    graph_context: props.test_cases[loadedTestCase].initial_graph_provider()
+                }}, (g) => setDisplayedGraph(g));
 
             }} />
         </main>

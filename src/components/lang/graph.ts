@@ -63,7 +63,6 @@ export class GraphContext {
 	graph: { [id: GraphNodeID]: GraphNode } = {};
 	active_node_id: GraphNodeID;
 	root_node_id: GraphNodeID;
-
 	static serializers = {
 		"bfs": (ctx: GraphContext, hovered_node_id: GraphNodeID | null): string => {
 			let edge_strings: string[] = [];

@@ -7,61 +7,43 @@ import { useMonaco } from "@monaco-editor/react";
 import { compile, run } from "../../lang/lang";
 import levelStyles from "../levels.module.css";
 import { LevelHeader } from "../LevelHeader";
+import { Level, Tab } from "../level/Level";
 
 export type Level1Props = {
     active_level: number
 }
 
 const LEVEL_NUM = 1;
+const LUNCH_TIME = 1200
 
 export function Level1(props: Level1Props) {
-
-
-    const monacoConst = useMonaco();
-
-    const [mountedEditor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(null);
-
-    const [displayedGraph, setDisplayedGraph] = useState<GraphContext | null>(null);
-    const [graphSerializer, setGraphSerializer] = useState<SerializerKey>("bfs");
-
     if (props.active_level !== 1) return <></>;
 
-    return <div className={levelStyles.levelWrapper}>
-        <LevelHeader></LevelHeader>
-        <span></span>
-        <main className={levelStyles.levelPanes}>
-            <EditorPane
-                onMount={(e) => setEditor(e)}
-                onChange={(e) => { }}
-                tabs={[{
-                    tab_kind: "editor",
-                    tab_name: "Editor"
-                }, {
-                    tab_kind: "react_node",
-                    tab_name: "Level 1",
-                    node: <div>
-                        <h1>Level 1</h1>
-                        <p>You're trapped! Escape!</p>
-                    </div>
+    const tabs: Tab[] = [{
+        tab_kind: "react_node",
+        tab_name: "Level 1",
+        node: <div>
+            <h1>Level 1 - Lunchtime</h1>
+            <p>You wake up for another morning of imprisonment in the intergalactic prison A-77.</p>
+        </div>
+    }, {
+        tab_kind: "editor",
+        tab_name: "Editor"
+    }
+    ]
+
+    return <Level active_level={props.active_level} tabs={tabs} test_cases={[
+        {
+            initial_graph_provider: () => new GraphContext({
+                "a": new GraphNode("a", 12700, [])
+            }, "a"),
+            solution_predicates: [
+                (graph) => {
+                    if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
+                    let only_node = graph.graph[Object.keys(graph.graph)[0]];
+                    return only_node.value === LUNCH_TIME;
                 }
-            ]}
-            ></EditorPane>
-            <span style={{width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 255, 0.2)"}}></span>
-            <ResultsPane graph={displayedGraph} serializer={GraphContext.serializers[graphSerializer]} onCompile={() => {
-                if (!mountedEditor) throw "OnCompile called with no editor";
-                if (!monacoConst) throw "OnCompile called without monaco";
-                let program = compile(mountedEditor.getValue());
-
-                run(program, {
-                    instruction_pointer: 0,
-                    graph_context: new GraphContext({
-                        "a": new GraphNode("a", 0, ["b", "c"]),
-                        "b": new GraphNode("b", 1, ["a"]),
-                        "c": new GraphNode("c", 5, ["a"])
-                    }, "a")
-                }, setDisplayedGraph);
-
-            }} />
-        </main>
-    </div>
+            ]
+        }
+    ]}></Level>
 }
