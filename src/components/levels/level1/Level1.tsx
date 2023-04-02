@@ -9,6 +9,7 @@ import levelStyles from "../levels.module.css";
 import { LevelHeader } from "../LevelHeader";
 import { Level, Tab } from "../level/Level";
 import { TestCaseLoader } from "../TestCaseLoader";
+import { ReferenceTab } from "../reference/reference";
 
 const LEVEL_NUM = 1;
 const LUNCH_TIME = 1200
@@ -101,7 +102,7 @@ export function Level1() {
                 <TestCaseLoader activate={() => setLoadedTestCase(ind)} index={ind} testCase={e} isActive={loadedTestCase === ind} isComplete={correctTestCases.indexOf(ind) !== -1}></TestCaseLoader>
             </div>)}
         </div>
-    }
+    }, ReferenceTab
     ];
 
     return <Level completeCase={completeCase} completedTestCased={correctTestCases} tabs={tabs} loadedTestCase={loadedTestCase} setLoadedTestCase={setLoadedTestCase} test_cases={test_cases}></Level>
