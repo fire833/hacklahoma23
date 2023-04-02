@@ -15,7 +15,7 @@ export function LevelSelect() {
     console.log("Rendering buttons with completedLevels", appContext.completedLevels);
     return <div className={styles.levelSelectWrapper} style={{
         backgroundImage: `url(${bgurl})`,
-        backgroundSize: "100%",
+        backgroundSize: "cover",
         color: "rgba(255, 255, 255, 0.9)"
     }}>
         <h1 style={{

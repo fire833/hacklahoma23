@@ -202,7 +202,7 @@ export default function ResultsPane(props: ResultsProps) {
 
             let gz = graphviz
                 .graphviz("#" + ResultsDiv)
-                .zoomScaleExtent([0, 0.9])
+                // .zoomScaleExtent([0, 0.9])
                 .dot(code)
                 .onerror(e => console.error(e))
                 .transition(() => transition.transition("graphtransition").duration(instructionDelay) as any)

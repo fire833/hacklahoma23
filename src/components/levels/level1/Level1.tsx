@@ -39,38 +39,38 @@ export function Level1() {
                 }
             ]
         },
-        {
-            initial_graph_provider: () => new GraphContext({
-                "b": new GraphNode("b", 123, []),
-            }, "b"),
-            solution_predicates: [
-                (graph) => {
-                    if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
-                    let only_node = graph.graph[Object.keys(graph.graph)[0]];
-                    let is_lunchtime = only_node.value === LUNCH_TIME;
-                    if (!is_lunchtime) {
-                        throw ("The graph's node must have value " + LUNCH_TIME);
-                    }
-                    return only_node.value === LUNCH_TIME;
-                }
-            ]
-        },
-        {
-            initial_graph_provider: () => new GraphContext({
-                "b": new GraphNode("b", 555, []),
-            }, "b"),
-            solution_predicates: [
-                (graph) => {
-                    if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
-                    let only_node = graph.graph[Object.keys(graph.graph)[0]];
-                    let is_lunchtime = only_node.value === LUNCH_TIME;
-                    if (!is_lunchtime) {
-                        throw ("The graph's node must have value " + LUNCH_TIME);
-                    }
-                    return only_node.value === LUNCH_TIME;
-                }
-            ]
-        }
+        // {
+        //     initial_graph_provider: () => new GraphContext({
+        //         "b": new GraphNode("b", 123, []),
+        //     }, "b"),
+        //     solution_predicates: [
+        //         (graph) => {
+        //             if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
+        //             let only_node = graph.graph[Object.keys(graph.graph)[0]];
+        //             let is_lunchtime = only_node.value === LUNCH_TIME;
+        //             if (!is_lunchtime) {
+        //                 throw ("The graph's node must have value " + LUNCH_TIME);
+        //             }
+        //             return only_node.value === LUNCH_TIME;
+        //         }
+        //     ]
+        // },
+        // {
+        //     initial_graph_provider: () => new GraphContext({
+        //         "b": new GraphNode("b", 555, []),
+        //     }, "b"),
+        //     solution_predicates: [
+        //         (graph) => {
+        //             if (!(Object.values(graph.graph).length === 1)) throw "Graph must have only one node";
+        //             let only_node = graph.graph[Object.keys(graph.graph)[0]];
+        //             let is_lunchtime = only_node.value === LUNCH_TIME;
+        //             if (!is_lunchtime) {
+        //                 throw ("The graph's node must have value " + LUNCH_TIME);
+        //             }
+        //             return only_node.value === LUNCH_TIME;
+        //         }
+        //     ]
+        // }
     ];
     const [loadedTestCase, setLoadedTestCase] = useState(0);
 
@@ -98,23 +98,29 @@ export function Level1() {
             <h1>Level 1 - Lunchtime</h1>
             <p>
                 You wake up for another morning of imprisonment in the intergalactic prison A-77. You have noticed for the last
-                few days that the countdown timer above your cell door always drops down to zero before your door unlocks and you
-                are able to go to recess/meals.
+                few days that the countdown timer above your cell door always unlocked at 1200 for lunch,
+                but today it doesn't seem to be moving.
+                How will you eat?!
             </p>
             <p>
-                You wonder if there is a way to modify the timer in order to get out of your cell
-                early. As you are rooting around in your computer, you find a program called <i>tedit</i> (your initial program state
-                to the right). You wonder if you can set the primary register (the root/active node) to 1200, then maybe your door will
-                open.
+                You wonder if there is a way to modify the timer in order to get out of your cell early. 
+                As you are rooting around in your computer, you find a program called <i>clockedit</i>,
+                but you don't have permission to access it. 
+                You wonder if you can find the memory location that it would set, and manually do it yourself.
+                Maybe your door will open if you can set it to 1200.
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to assign values to nodes with the <i>SET</i> instruction. You can do this by writing
+                Your program will begin with a single node in memory (the big circle to the right, with value 12700), corresponding to the time on the clock.
+            </p>
+            <p>
+                You'll need to assign a value to this node with the <i>SET</i> instruction. You can do this by writing
             </p>
             <b>SET 1200</b>
             <p>
-                Within your program terminal, and try and run it. If your graph pane lights up green, then you the register was successfully
-                set to zero and your door opened!
+                in the editor tab (they're at the top of the panel you're reading right now!).
+                Once you run it, if the graph on the right panel turns green, you've completed the challenge!
+                A button will appear in the top right to move on to the next puzzle.
             </p>
         </div>
     }, EditorTab,

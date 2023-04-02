@@ -67,9 +67,12 @@ export function Level2() {
         node: <div style={{ padding: "2%" }}>
             <h1>Level 2 - Teaching Counting</h1>
             <p>
-                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
-                to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
-                of the galaxy.
+                You run your program - and in a flash - the door swings open!
+                You head off down the hall for a hearty intergalactic space meal.
+                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. 
+                Recognizing you as an Earthling, he comes up to you and begins
+                to ask you of how numbers work and how counting works, 
+                as arithmetic is fundamentally different within the far reaches of the galaxy, and it piques the interest of the wookie.
             </p>
             <p>
                 You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
@@ -91,6 +94,21 @@ export function Level2() {
                 A node's 0th neighbor will always be the node that created it (unless it is the root).
                 The <b>TRAVERSE N</b> function will move to the active node's neighbor at index N.
             </p>
+            <p>
+                To traverse to the last neighbor of the current node (the one most recently created),
+                you can find the index by subtracting 1 from the total number of neighbors the current node has.
+                Helpfully, there's a function just for that!
+            </p>
+            <p>
+                <b>$MATH_ADD</b> takes two integers and returns their value.
+                Calling<br></br> <b>TRAVERSE $MATH_ADD $NUM_NEIGHBORS -1 </b> 
+                will traverse to the last neighbor, which may be useful for this challenge.
+            </p>
+            {/* <p>
+                This is useful because the root node will only have one neighbor,
+                the first node you create using <b> BUBBLE </b>, but others will have 2,
+                the node which created it and the next node. 
+            </p> */}
         </div>
     }, EditorTab,
     {
