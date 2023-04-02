@@ -54,15 +54,16 @@ export function Level7() {
         tab_kind: "react_node",
         tab_name: "📒 Level 7",
         node: <div style={{ padding: "2%" }}>
-            <h1>Level 7 - Teaching Counting</h1>
+            <h1>Level 7 - Password Cracking</h1>
             <p>
-                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
-                to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
-                of the galaxy.
+                As yet nother day passes constrained to your cell, you eventually hear from your Wookie friend about a potential password
+                vulnerability that affects the prison warden's master database password. He says that the <i>pswd</i> (short for password) 
+                program has a bug that could allow you to crack the warden's password. With the password, you could update the database records
+                to say that your incarceration status is none! You could then be released and on your merry way home!!
             </p>
             <p>
-                You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
-                show him how to count with the Arabic numerals.
+                You begin to tinker with the program, and you realize that the warden's password is actually the sum of the factors of two numbers, 
+                which are then themselves summed to acquire the password. It turns out, these input numbers are stored within your program memory!! 
             </p>
             <h4>Goals/Objectives</h4>
             <p>
