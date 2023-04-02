@@ -183,6 +183,9 @@ export default function ResultsPane(props: ResultsProps) {
         setRunHooks(runHooks);
         setIsProgramActive(true);
         setLastErrorString(null);
+        if(props.mountedEditor.getModel()){
+            monacoConst.editor.setModelMarkers(props.mountedEditor.getModel() as any, "", []);
+        }
 
         return runHooks;
 

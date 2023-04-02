@@ -33,7 +33,9 @@ export function Level3() {
             solution_predicates: [
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 20)) throw "Graph must have 20 nodes";
-                    return (graph.graph[graph.root_node_id].value === 20 && graph.graph[graph.active_node_id].value === 0)
+                    let lastvalueis1 = graph.graph[graph.active_node_id].value === 1;
+                    if(!lastvalueis1) throw "The list should go from 20 to 1";
+                    return true;
                 },
             ],
         },
@@ -44,7 +46,9 @@ export function Level3() {
             solution_predicates: [
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 7)) throw "Graph must have 7 nodes";
-                    return (graph.graph[graph.root_node_id].value === 7 && graph.graph[graph.active_node_id].value === 0)
+                    let lastvalueis1 = graph.graph[graph.active_node_id].value === 1;
+                    if(!lastvalueis1) throw "The list should go from 20 to 1";
+                    return true;
                 },
             ],
         },
@@ -55,7 +59,9 @@ export function Level3() {
             solution_predicates: [
                 (graph) => {
                     if (!(Object.values(graph.graph).length === 16)) throw "Graph must have 16 nodes";
-                    return (graph.graph[graph.root_node_id].value === 16 && graph.graph[graph.active_node_id].value === 0)
+                    let lastvalueis1 = graph.graph[graph.active_node_id].value === 1;
+                    if(!lastvalueis1) throw "The list should go from 20 to 1";
+                    return true;
                 },
             ],
         },
@@ -82,23 +88,46 @@ export function Level3() {
                 <i> downwards</i>.
             </p>
             <p>
-                You decide to show your Wookie friend how to loop and create linked lists of arbitrarily-sized numbers decrementing from N to 0.
+                You decide to write a program for your Wookie friend, which will count down from any number they please. 
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to create a arbitrarily-large linked list of numbers within your graph structure, starting from N, 
-                and reducing to 0 using loop semantics. You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions similar to before,
-                but you will also add on using labels and <b>GOTO_IF_NEQ</b> to conditionally jump and create new children. It is important to note that
-                N will never be smaller than 5, but never larger than 50. You can follow a looping pattern similar to below to complete this challenge:
+                The memory graph at the start of the program will consist of a single node with value N.
+                Your program should create a linked list off of this node, with values N-1, N-2, N-3, and so on,
+                all the way down to 1.
             </p>
-            <b>loop: BUBBLE $MATH_ADD $VALUE -1</b> <br/>
-            <b>TRAVERSE 1</b> <br/>
-            <b>GOTO_IF_NEQ $VALUE 0</b> <br/>
             <p>
-                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
-                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
-                for our counting system!
+                To do this for any number, you'll need to be able to loop.
+                Thankfully, looping in this galaxy's assembly language is similar to earth's.
             </p>
+            <p>
+                <i>A line of code may start with a label</i>.
+                For example:
+            </p>
+            <p>
+                <b>loop: SET 15</b> <br></br>
+                <b>GOTO loop: </b>
+                <span color="rgba(0, 0, 0, 0.5)!important" style={{fontWeight: "light!important!important"}}># Note the trailing colon. It is always part of the loop name</span>
+            </p>
+            <p>
+                That example will infinitely set the current node's value to 15.
+                Infinite looping is probably not what we want, so we need a way to stop somehow.
+                The <b>GOTO_IF_NEQ</b> command can do this.
+                The command takes a label and two integers as parameters, and if the integers are not equal,
+                the program will jump to that label. (The EXIT_IF_EQ command does the opposite)
+            </p>    
+            <p>
+                The last function you'll find useful is the <b>$VALUE</b> function,
+                which returns the value of the active node.
+            </p>
+            <p>
+                You'll need to put all of those pieces together to complete your wookie friend's counting program.
+                The following snippet is a good starting point, but it will need some tweaking to handle the root node 
+                correctly, who will only have one neighbor (so TRAVERSE 1) won't work.
+            </p>
+            <b>loop: BUBBLE $MATH_ADD $VALUE -1</b><br/>
+            <b>TRAVERSE 1</b><br/>
+            <b>GOTO_IF_NEQ loop: $VALUE 1</b><br/>
         </div>
     }, EditorTab,
     {
