@@ -406,7 +406,6 @@ function parseLine(line: TokenWithValue[]): Instruction {
 
     current_token_idx++;
 
-
     let { params, tokens_consumed } = evaluate_params(function_name, line.slice(current_token_idx))
     console.log(`Resolved params:`, params);
 
