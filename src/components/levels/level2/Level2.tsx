@@ -17,35 +17,15 @@ export function Level2() {
 
     const test_cases: TestCase[] = [
         {
-            initial_graph_provider: () => new GraphContext({
-                "a": new GraphNode("a", 12700, [])
-            }, "a"),
+            initial_graph_provider: () => {
+                return new GraphContext({"a": new GraphNode("a", 0)}, "a");
+            },
             solution_predicates: [
                 (graph) => {
-                    return false
-                }
-            ]
+                    return (graph.root_node_id === "a" && graph.graph[graph.root_node_id].value === 0 && graph.graph[graph.active_node_id].value === 3)                    
+                },
+            ],
         },
-        {
-            initial_graph_provider: () => new GraphContext({
-                "b": new GraphNode("b", 123, []),
-            }, "b"),
-            solution_predicates: [
-                (graph) => {
-                    return false
-                }
-            ]
-        },
-        {
-            initial_graph_provider: () => new GraphContext({
-                "b": new GraphNode("b", 555, []),
-            }, "b"),
-            solution_predicates: [
-                (graph) => {
-                    return false
-                }
-            ]
-        }
     ];
     const [loadedTestCase, setLoadedTestCase] = useState(0);
 
@@ -63,23 +43,25 @@ export function Level2() {
         node: <div style={{ padding: "2%" }}>
             <h1>Level 2 - Teaching Counting</h1>
             <p>
-                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. You have spoken with him 
-                before, and he 
+                As you reach the lunch room, you come across a Wookie from the far reaches of the galaxy. He comes up to you and begins
+                to ask you of how numbers work and how counting works, as arithmetic is fundamentally different within the far reaches 
+                of the galaxy.
             </p>
             <p>
-                You wonder if there is a way to modify the timer in order to get out of your cell
-                early. As you are rooting around in your computer, you find a program called <i>tedit</i> (your initial program state
-                to the right). You wonder if you can set the primary register (the root/active node) to 0, then maybe your door will
-                open.
+                You decide to give your Wookie friend a quick tutorial on counting on your computer. You open up a program and begin to 
+                show him how to count with the Arabic numerals.
             </p>
             <h4>Goals/Objectives</h4>
             <p>
-                The goal for this challenge is to assign values to nodes with the <i>SET</i> instruction. You can do this by writing
+                The goal for this challenge is to create a linked list of numbers within your graph structure, starting from 0, and going up to 3.
+                You can implement this using the <b>BUBBLE</b> and <b>TRAVERSE</b> instructions. You can follow a pattern similar to
             </p>
-            <b>SET 0</b>
+            <b>BUBBLE N</b>
+            <b>TRAVERSE 0</b>
             <p>
-                Within your program terminal, and try and run it. If your graph pane lights up green, then you the register was successfully
-                set to zero and your door opened!
+                Where N is the number you wish to have within your next node, which should be currentNode + 1. Within your program terminal, and 
+                try and run it. If your graph pane lights up green, then the program ran successfully, and your Wookie friend has a new appreciation
+                for our counting system!
             </p>
         </div>
     }, {
