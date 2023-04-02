@@ -116,13 +116,6 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         },
         hover_md_lines: [
             ["Append a neighbor to the active node with a preset value of P1."],
-            // [
-            //     "**Example:**",
-            //     "```" + LANG,
-            //     "$MATH_MOD 35 3 # Returns a value of 2",
-            //     "$MATH_MOD 35 5 # Returns a value of 0",
-            //     "```"
-            // ]
         ],
         num_params: 1,
     },
@@ -202,28 +195,70 @@ export const FunctionDefinitions: { [funcname: string]: FuncDef } = {
         evaluate: (_: ProgramState) => {
 
         },
-        num_params: 1,
         hover_md_lines: [
-            []
-        ]
-
+            ["Runs instruction P1 as if the root node is the active node. It does this without changing the currently active node."],
+        ],
+        num_params: 1,
     },
     "GOTO": {
         evaluate: (state: ProgramState, label: string) => {
             let lines_with_label = state.program.map((e, ind) => [e, ind]).filter(e => (e[0] as Instruction).label === label);
-            if(lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
+            if (lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
             state.instruction_pointer = (lines_with_label[0][1] as number);
         },
-        num_params: 1
+        hover_md_lines: [
+            ["Jumps to the label P1 and continues execution at the next instruction."],
+        ],
+        num_params: 1,
+    },
+    "GOTO_IF_EQ": {
+        evaluate: (state: ProgramState, label: string, a: number, b: number) => {
+            if (a === b) {
+                let lines_with_label = state.program.map((e, ind) => [e, ind]).filter(e => (e[0] as Instruction).label === label);
+                if (lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
+                state.instruction_pointer = (lines_with_label[0][1] as number);
+            }
+        },
+        hover_md_lines: [
+            ["Jumps to label P1 if P2 and P3 are equal."],
+        ],
+        num_params: 3,
+    },
+    "GOTO_IF_NEQ": {
+        evaluate: (state: ProgramState, label: string, a: number, b: number) => {
+            if (a !== b) {
+                let lines_with_label = state.program.map((e, ind) => [e, ind]).filter(e => (e[0] as Instruction).label === label);
+                if (lines_with_label.length === 0) throw `No line with label ${label} was found.` + (label.endsWith(":") ? "" : "All labels must end with a colon. Maybe you meant `" + label + ":`?")
+                state.instruction_pointer = (lines_with_label[0][1] as number);
+            }
+        },
+        hover_md_lines: [
+            ["Jumps to label P1 if P2 and P3 are not equal."],
+        ],
+        num_params: 3,
     },
     "EXIT_IF_EQ": {
         evaluate: (state: ProgramState, a: number, b: number) => {
-            if(a === b) {
+            if (a === b) {
                 state.instruction_pointer = Infinity;
             }
         },
-        num_params: 2
-    }
+        hover_md_lines: [
+            ["Exits the current running program if P1 and P2 are equal."],
+        ],
+        num_params: 2,
+    },
+    "EXIT_IF_NEQ": {
+        evaluate: (state: ProgramState, a: number, b: number) => {
+            if (a !== b) {
+                state.instruction_pointer = Infinity;
+            }
+        },
+        hover_md_lines: [
+            ["Exits the currently runnning program if P1 and P2 are not equal."],
+        ],
+        num_params: 2,
+    },
 }
 
 export const LANG_DEF: languages.IMonarchLanguage = {
